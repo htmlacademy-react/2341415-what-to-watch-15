@@ -1,7 +1,7 @@
 # Личный проект «Что посмотреть»
 
 * Студент: [Elena Vlasenko](https://up.htmlacademy.ru/react/15/user/2341415).
-* Наставник: `Неизвестно`.
+* Наставник: [Oleg Glushenko](https://htmlacademy.ru/profile/id305355).
 
 ---
 
