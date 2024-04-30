@@ -6,14 +6,19 @@ import { Film } from '../../types';
 import { FilmTab } from '../../const';
 import FilmOverview from '../../components/film-tabs/film-overview';
 import FilmDetails from '../../components/film-tabs/film-details';
+import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
+import CommentsList from '../../components/comments/comment-list';
+import { useAppSelector } from '../../hooks/app-dispatch';
+import { selectComments } from '../../store/comments-slice';
 
 type Props = {
   selectedFilm: Film;
 };
 
 function FilmPage({ selectedFilm }: Props): JSX.Element {
-  const { name, genre, released, posterImage, backgroundImage } = selectedFilm;
+  const { name, genre, released, posterImage, backgroundImage, id } = selectedFilm;
   const [selectedTab, setSelectedTab] = useState<FilmTab>(FilmTab.OverView);
+  const reviews = useAppSelector(selectComments);
 
   function getTabContent(tab: FilmTab): JSX.Element {
     if(tab === FilmTab.OverView) {
@@ -22,7 +27,7 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
     if(tab === FilmTab.Details) {
       return <FilmDetails selectedFilm={selectedFilm} />;
     }
-    return <FilmOverview selectedFilm={selectedFilm} />;
+    return <CommentsList reviews={reviews} />;
   }
 
   return (
@@ -45,19 +50,7 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
                 <span className="film-card__year">{released}</span>
               </p>
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width={19} height={19}>
-                    <use xlinkHref="#play-s" />
-                  </svg>
-                  <span>Play</span>
-                </button>
-                <button className="btn btn--list film-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width={19} height={20}>
-                    <use xlinkHref="#add" />
-                  </svg>
-                  <span>My list</span>
-                  <span className="film-card__count">9</span>
-                </button>
+                <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} />
                 <a href="add-review.html" className="btn film-card__button">
                   Add review
                 </a>
@@ -76,7 +69,7 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
               />
             </div>
             <div className="film-card__desc">
-              <FilmTabs onTabClick={setSelectedTab}/>
+              <FilmTabs onTabClick={setSelectedTab} selectedTab={selectedTab} />
               {getTabContent(selectedTab)}
             </div>
           </div>

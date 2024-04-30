@@ -1,3 +1,5 @@
+import { datatype } from 'faker';
+
 export const films = [
   {
     id: '169b6fc4-9a98-4393-ba00-8a5908faf0e8',
@@ -147,7 +149,7 @@ export const selectedFilm = {
   posterImage: 'https://15.design.htmlacademy.pro/static/film/poster/Revenant.jpg',
   backgroundImage: 'https://15.design.htmlacademy.pro/static/film/background/Revenant.jpg',
   backgroundColor: '#92918B',
-  videoLink: 'https://15.design.htmlacademy.pro/static/film/video/matrix.mp4',
+  videoLink: 'https://15.design.htmlacademy.pro/static//film/video/dog.mp4',
   description: 'A frontiersman on a fur trading expedition in the 1820s fights for survival after being mauled by a bear and left for dead by members of his own hunting team.',
   rating: 4,
   scoresCount: 618498,
@@ -168,8 +170,60 @@ export const promoFilm = {
   name: 'The Grand Budapest Hotel',
   posterImage: 'https://url-to-image/image.jpg',
   backgroundImage: 'https://url-to-image/image.jpg',
-  videoLink: 'https://url-to-video/video.mp4',
+  videoLink: 'https://15.design.htmlacademy.pro/static//film/video/dog.mp4',
   genre: 'Comedy',
   released: 2014,
   isFavorite: false
 };
+
+export const comments = [
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '1.',
+    rating: 8
+  },
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '2.',
+    rating: 8
+  },
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '3.',
+    rating: 8
+  },
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '4.',
+    rating: 8
+  },
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '5.',
+    rating: 8
+  },
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '6.',
+    rating: 8
+  },
+  {
+    id: datatype.uuid(),
+    date: '2023-05-25T12:00:00.000Z',
+    user: 'Kate Muir',
+    comment: '7.',
+    rating: 8
+  }
+];

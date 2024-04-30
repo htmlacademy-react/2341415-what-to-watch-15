@@ -26,3 +26,11 @@ export type Film = PromoFilm & {
   starring: string[];
   runTime: number;
 };
+
+export type Comment = {
+  id: string;
+  date: string;
+  user: string;
+  comment: string;
+  rating: number;
+};

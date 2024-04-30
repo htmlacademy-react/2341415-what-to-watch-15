@@ -1,11 +1,18 @@
 import { MouseEventHandler } from 'react';
 import { FilmTab } from '../../const';
+import cn from 'classnames';
 
 type Props = {
   onTabClick: (tab: FilmTab) => void;
+  selectedTab: FilmTab;
 }
 
-function FilmTabs({ onTabClick }:Props): JSX.Element {
+function FilmTabs({ onTabClick, selectedTab }:Props): JSX.Element {
+
+  function getClassName(tab: FilmTab): string {
+    return cn('film-nav__item', { 'film-nav__item--active': tab === selectedTab });
+  }
+
   const handleClick: MouseEventHandler = (evt) => {
     evt.preventDefault();
 
@@ -18,17 +25,17 @@ function FilmTabs({ onTabClick }:Props): JSX.Element {
   return (
     <nav className="film-nav film-card__nav">
       <ul className="film-nav__list" onClick={handleClick}>
-        <li className="film-nav__item film-nav__item--active">
+        <li className={getClassName(FilmTab.OverView)}>
           <a href="#" className="film-nav__link">
             {FilmTab.OverView}
           </a>
         </li>
-        <li className="film-nav__item">
+        <li className={getClassName(FilmTab.Details)}>
           <a href="#" className="film-nav__link">
             {FilmTab.Details}
           </a>
         </li>
-        <li className="film-nav__item">
+        <li className={getClassName(FilmTab.Reviews)}>
           <a href="#" className="film-nav__link">
             {FilmTab.Reviews}
           </a>

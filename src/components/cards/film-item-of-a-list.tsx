@@ -4,7 +4,7 @@ import { AppRoute } from '../../const';
 
 export type Props = Pick<FilmListItem, 'name' | 'previewImage' | 'id'>;
 
-function FilmItemOfList({ name, previewImage, id }: Props): JSX.Element {
+function FilmItemOfAList({ name, previewImage, id }: Props): JSX.Element {
 
   const navigate = useNavigate();
 
@@ -34,4 +34,4 @@ function FilmItemOfList({ name, previewImage, id }: Props): JSX.Element {
   );
 }
 
-export default FilmItemOfList;
+export default FilmItemOfAList;
