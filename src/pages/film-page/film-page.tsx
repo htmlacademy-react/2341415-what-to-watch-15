@@ -3,13 +3,14 @@ import FilmTabs from '../../components/film-tabs/film-tabs';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/genre-tabs/header/header';
 import { Film } from '../../types';
-import { FilmTab } from '../../const';
+import { FilmTab, PageRoute } from '../../const';
 import FilmOverview from '../../components/film-tabs/film-overview';
 import FilmDetails from '../../components/film-tabs/film-details';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
 import CommentsList from '../../components/comments/comment-list';
 import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectComments } from '../../store/comments-slice';
+import { Link } from 'react-router-dom';
 
 type Props = {
   selectedFilm: Film;
@@ -51,9 +52,9 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
               </p>
               <div className="film-card__buttons">
                 <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} />
-                <a href="add-review.html" className="btn film-card__button">
+                <Link to={PageRoute.FilmReview} className="btn film-card__button">
                   Add review
-                </a>
+                </Link>
               </div>
             </div>
           </div>
