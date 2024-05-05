@@ -1,5 +1,5 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
-import { FilmListItem, PromoFilm } from '../types';
+import { Film, FilmListItem } from '../types';
 import { films, promoFilm } from '../fake-data/films';
 
 const createSliceWithThunks = buildCreateSlice({
@@ -8,7 +8,7 @@ const createSliceWithThunks = buildCreateSlice({
 
 type FilmsState = {
   films: FilmListItem[];
-  promoFilm: PromoFilm;
+  promoFilm: Film;
 }
 
 const initialState: FilmsState = {

@@ -1,30 +1,31 @@
-import { buildCreateSlice, asyncThunkCreator, PayloadAction } from '@reduxjs/toolkit';
-
-const createSliceWithThunks = buildCreateSlice({
-  creators: { asyncThunk: asyncThunkCreator },
-});
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type PlayerState = {
   videoLink: string;
+  runTime: number;
 }
 
 const initialState: PlayerState = {
   videoLink: '',
+  runTime: 0,
 };
 
-const playerSlice = createSliceWithThunks({
+const playerSlice = createSlice({
   name: 'player',
   initialState,
   selectors: {
     selectVideoLink: (state) => state.videoLink,
+    selectRunTime: (state) => state.runTime,
   },
   reducers: {
-    setVideoLink(state, action: PayloadAction<string>) {
-      state.videoLink = action.payload;
+    setVideoParams(state, action: PayloadAction<{ videoLink: string; runTime: number }>) {
+      const { payload } = action;
+      state.videoLink = payload.videoLink;
+      state.runTime = payload.runTime;
     }
   },
 });
 
 export default playerSlice;
-export const { setVideoLink } = playerSlice.actions;
-export const { selectVideoLink } = playerSlice.selectors;
+export const { setVideoParams } = playerSlice.actions;
+export const { selectVideoLink, selectRunTime } = playerSlice.selectors;
