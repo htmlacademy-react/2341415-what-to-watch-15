@@ -2,9 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { FilmListItem } from '../../types';
 import { AppRoute } from '../../const';
 
-export type Props = Pick<FilmListItem, 'name' | 'previewImage' | 'id'>;
+export type Props = Pick<FilmListItem, 'name' | 'previewImage' | 'id'> & {
+  onCardMouseEnter: (id: string) => void;
+  onCardMouseLeave: () => void;
+};
 
-function FilmItemOfAList({ name, previewImage, id }: Props): JSX.Element {
+function FilmItemOfAList({ name, previewImage, id, onCardMouseEnter, onCardMouseLeave }: Props): JSX.Element {
 
   const navigate = useNavigate();
 
@@ -16,6 +19,8 @@ function FilmItemOfAList({ name, previewImage, id }: Props): JSX.Element {
     <article
       onClick={handleClick}
       className="small-film-card catalog__films-card"
+      onMouseEnter={() => onCardMouseEnter(id)}
+      onMouseLeave={onCardMouseLeave}
     >
       <div className="small-film-card__image">
         <img
