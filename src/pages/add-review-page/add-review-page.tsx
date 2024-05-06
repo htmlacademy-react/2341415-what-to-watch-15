@@ -1,30 +1,26 @@
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import Header from '../../components/genre-tabs/header/header';
+import { useAppSelector } from '../../hooks/app-dispatch';
+import { selectSelectedFilm } from '../../store/film-slice';
 
 function AddReviewPage(): JSX.Element {
+  const selectedFilm = useAppSelector(selectSelectedFilm);
+
   return (
     <section className="film-card film-card--full">
       <div className="film-card__header">
         <div className="film-card__bg">
           <img
-            src="img/bg-the-grand-budapest-hotel.jpg"
-            alt="The Grand Budapest Hotel"
+            src={selectedFilm.backgroundImage}
+            alt={selectedFilm.name}
           />
         </div>
         <h1 className="visually-hidden">WTW</h1>
-        <header className="page-header">
-          <div className="logo">
-            <Link to={AppRoute.Main} className="logo__link">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </Link>
-          </div>
+        <Header className='page-header'>{
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
                 <a href="film-page.html" className="breadcrumbs__link">
-                  The Grand Budapest Hotel
+                  {selectedFilm.name}
                 </a>
               </li>
               <li className="breadcrumbs__item">
@@ -32,26 +28,12 @@ function AddReviewPage(): JSX.Element {
               </li>
             </ul>
           </nav>
-          <ul className="user-block">
-            <li className="user-block__item">
-              <div className="user-block__avatar">
-                <img
-                  src="img/avatar.jpg"
-                  alt="User avatar"
-                  width={63}
-                  height={63}
-                />
-              </div>
-            </li>
-            <li className="user-block__item">
-              <a className="user-block__link">Sign out</a>
-            </li>
-          </ul>
-        </header>
+        }
+        </Header>
         <div className="film-card__poster film-card__poster--small">
           <img
-            src="img/the-grand-budapest-hotel-poster.jpg"
-            alt="The Grand Budapest Hotel poster"
+            src={selectedFilm.posterImage}
+            alt={selectedFilm.name}
             width={218}
             height={327}
           />
@@ -87,7 +69,7 @@ function AddReviewPage(): JSX.Element {
                 type="radio"
                 name="rating"
                 defaultValue={8}
-                // defaultChecked=""
+                defaultChecked={undefined}
               />
               <label className="rating__label" htmlFor="star-8">
                 Rating 8
@@ -170,7 +152,7 @@ function AddReviewPage(): JSX.Element {
               name="review-text"
               id="review-text"
               placeholder="Review text"
-              // defaultValue={""}
+              defaultValue=""
             />
             <div className="add-review__submit">
               <button className="add-review__btn" type="submit">
