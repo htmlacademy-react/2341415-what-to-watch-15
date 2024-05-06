@@ -3,7 +3,7 @@ import FilmTabs from '../../components/film-tabs/film-tabs';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/genre-tabs/header/header';
 import { Film } from '../../types';
-import { FilmTab, PageRoute } from '../../const';
+import { AppRoute, FilmTab } from '../../const';
 import FilmOverview from '../../components/film-tabs/film-overview';
 import FilmDetails from '../../components/film-tabs/film-details';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
@@ -51,8 +51,8 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
                 <span className="film-card__year">{released}</span>
               </p>
               <div className="film-card__buttons">
-                <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} />
-                <Link to={PageRoute.FilmReview} className="btn film-card__button">
+                <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} runTime={selectedFilm.runTime}/>
+                <Link to={`${AppRoute.Film}${selectedFilm.id}${AppRoute.FilmReview}`} className="btn film-card__button">
                   Add review
                 </Link>
               </div>

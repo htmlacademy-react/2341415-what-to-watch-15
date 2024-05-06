@@ -1,11 +1,13 @@
 import { useRef } from 'react';
 import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectVideoLink } from '../../store/player-slice';
+import { selectRunTime, selectVideoLink } from '../../store/player-slice';
+import { getRunTime } from '../../utils';
 
 function PlayerPage(): JSX.Element {
 
   const videoLink = useAppSelector(selectVideoLink);
   const vidRef = useRef<HTMLVideoElement>(null);
+  const runTime = useAppSelector(selectRunTime);
 
   const handlePlayVideo = () => {
     if (vidRef.current) {
@@ -29,7 +31,7 @@ function PlayerPage(): JSX.Element {
               Toggler
             </div>
           </div>
-          <div className="player__time-value">1:30:29</div>
+          <div className="player__time-value">{getRunTime(runTime)}</div>
         </div>
         <div className="player__controls-row">
           <button onClick={handlePlayVideo} type="button" className="player__play">
