@@ -17,7 +17,7 @@ function PlayerPage(): JSX.Element {
 
   return (
     <div className="player">
-      <video ref={vidRef} className="player__video" poster="img/player-poster.jpg">
+      <video ref={vidRef} className="player__video" poster="img/player-poster.jpg" muted loop autoPlay>
         <source src={videoLink} type="video/mp4" />
       </video>
       <button type="button" className="player__exit">

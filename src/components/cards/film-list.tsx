@@ -11,7 +11,7 @@ function FilmList({ films }: Props): JSX.Element {
 
   return (
     <div className="catalog__films-list">
-      {films.map(({ id, name, previewImage }) => <FilmItemOfAList key={id} name={name} previewImage={previewImage} id={id} onCardMouseEnter={setActiveFilmId} onCardMouseLeave={handleFilmMouseLeave}/>)}
+      {films.map(({ id, name, previewImage, previewVideoLink }) => <FilmItemOfAList key={id} name={name} previewImage={previewImage} id={id} previewVideoLink={previewVideoLink} onCardMouseEnter={setActiveFilmId} onCardMouseLeave={handleFilmMouseLeave}/>)}
     </div>
   );
 }
