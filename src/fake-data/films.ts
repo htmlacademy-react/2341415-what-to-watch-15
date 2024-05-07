@@ -13,14 +13,14 @@ export const films = [
     name: 'Bohemian Rhapsody',
     previewImage: 'https://15.design.htmlacademy.pro/static/film/preview/bohemian_rhapsody.jpg',
     previewVideoLink: 'https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4',
-    genre: 'Drama'
+    genre: 'Action'
   },
   {
     id: 'c826724d-3a2f-47ab-a27f-93ad2d05adce',
     name: 'Macbeth',
     previewImage: 'https://15.design.htmlacademy.pro/static/film/preview/macbeth.jpg',
     previewVideoLink: 'https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4',
-    genre: 'Drama'
+    genre: 'Action'
   },
   {
     id: 'cc27fe4d-c474-42cc-8328-239460189012',
@@ -41,7 +41,7 @@ export const films = [
     name: 'What We Do in the Shadows',
     previewImage: 'https://15.design.htmlacademy.pro/static/film/preview/what-we-do-in-the-shadows.jpg',
     previewVideoLink: 'https://15.design.htmlacademy.pro/static//film/video/traffic.mp4',
-    genre: 'Comedy'
+    genre: 'Action'
   },
   {
     id: 'f311cd00-5483-4c30-ad2d-9707bdaf5cc9',
@@ -55,7 +55,7 @@ export const films = [
     name: 'Johnny English',
     previewImage: 'https://15.design.htmlacademy.pro/static/film/preview/johnny-english.jpg',
     previewVideoLink: 'https://15.design.htmlacademy.pro/static//film/video/traffic.mp4',
-    genre: 'Comedy'
+    genre: 'Action'
   },
   {
     id: '6447f465-9563-4b4d-a175-31e26f202278',
@@ -69,7 +69,7 @@ export const films = [
     name: 'Pulp Fiction',
     previewImage: 'https://15.design.htmlacademy.pro/static/film/preview/pulp-fiction.jpg',
     previewVideoLink: 'https://15.design.htmlacademy.pro/static//film/video/traffic.mp4',
-    genre: 'Crime'
+    genre: 'Action'
   },
   {
     id: '6e9127ee-9fc6-4f99-98a5-68d788ba4043',

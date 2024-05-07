@@ -13,7 +13,7 @@ type FilmState = {
 
 const initialState: FilmState = {
   selectedFilm: selectedFilm,
-  similarFilms: films.slice(4, 8)
+  similarFilms: films.filter((film) => film.genre === selectedFilm.genre).slice(0, 4)
 };
 
 const filmSlice = createSliceWithThunks({
