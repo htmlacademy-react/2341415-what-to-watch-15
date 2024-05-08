@@ -3,22 +3,13 @@ import FilmCardButtons from '../../components/film-card-buttons/film-card-button
 import Footer from '../../components/footer/footer';
 import GenreTabs from '../../components/genre-tabs/genre-tabs';
 import Header from '../../components/genre-tabs/header/header';
+import { ALL_GENRES } from '../../const';
 import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectPromoFilm, selectFilms } from '../../store/films-slice';
+import { selectPromoFilm, selectFilms, selectGenres } from '../../store/films-slice';
 
 function MainPage(): JSX.Element {
-  const genres = [
-    'All genres',
-    'Comedies',
-    'Crime',
-    'Documentary',
-    'Dramas',
-    'Horror',
-    'Kids &amp; Family',
-    'Romance',
-    'Sci-Fi',
-    'Thrillers',
-  ];
+
+  const filmGenres = useAppSelector(selectGenres);
 
   const films = useAppSelector(selectFilms);
   const promoFilm = useAppSelector(selectPromoFilm);
@@ -60,7 +51,7 @@ function MainPage(): JSX.Element {
       <div className="page-content">
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
-          <GenreTabs genres={genres} />
+          <GenreTabs genres={[ALL_GENRES, ...filmGenres]} />
           <FilmList films={films} />
           <div className="catalog__more">
             <button className="catalog__button" type="button">
