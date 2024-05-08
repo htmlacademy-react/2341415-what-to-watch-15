@@ -51,7 +51,7 @@ function MainPage(): JSX.Element {
                 <span className="film-card__year">{promoFilm.released}</span>
               </p>
               <div className="film-card__buttons">
-                <FilmCardButtons id={promoFilm.id} videoLink={promoFilm.videoLink} />
+                <FilmCardButtons id={promoFilm.id} videoLink={promoFilm.videoLink} runTime={promoFilm.runTime} />
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@ function MainPage(): JSX.Element {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
           <GenreTabs genres={genres} />
-          <FilmList films={films}/>
+          <FilmList films={films} />
           <div className="catalog__more">
             <button className="catalog__button" type="button">
               Show more

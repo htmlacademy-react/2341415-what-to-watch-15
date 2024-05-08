@@ -9,7 +9,7 @@ export function getRatingName(rating: number): string {
 }
 
 export function getRunTime(runTime: number): string {
-  const hours = runTime / 60;
+  const hours = Math.floor(runTime / 60);
   const minutes = runTime % 60;
   return `${hours}h ${minutes}m`;
 }

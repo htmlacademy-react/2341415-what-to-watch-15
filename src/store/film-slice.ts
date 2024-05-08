@@ -1,6 +1,6 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
-import { Film } from '../types';
-import { selectedFilm } from '../fake-data/films';
+import { Film, FilmListItem } from '../types';
+import { films, selectedFilm } from '../fake-data/films';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -8,10 +8,12 @@ const createSliceWithThunks = buildCreateSlice({
 
 type FilmState = {
   selectedFilm: Film;
+  similarFilms: FilmListItem[];
 }
 
 const initialState: FilmState = {
   selectedFilm: selectedFilm,
+  similarFilms: films.filter((film) => film.genre === selectedFilm.genre).slice(0, 4)
 };
 
 const filmSlice = createSliceWithThunks({
@@ -19,9 +21,10 @@ const filmSlice = createSliceWithThunks({
   initialState,
   selectors: {
     selectSelectedFilm: (state) => state.selectedFilm,
+    selectSimilarFilms: (state) => state.similarFilms,
   },
   reducers: {},
 });
 
 export default filmSlice;
-export const { selectSelectedFilm } = filmSlice.selectors;
+export const { selectSelectedFilm, selectSimilarFilms } = filmSlice.selectors;
