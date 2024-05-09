@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { PageRoute } from '../../../const';
-import Logo from '../../logo/logo';
+import { PageRoute } from '../../const';
+import Logo from '../logo/logo';
 
 type Props = {
   className: string;

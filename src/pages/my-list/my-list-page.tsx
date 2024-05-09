@@ -1,6 +1,6 @@
 import FilmList from '../../components/cards/film-list';
 import Footer from '../../components/footer/footer';
-import Header from '../../components/genre-tabs/header/header';
+import Header from '../../components/header/header';
 import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectMyList } from '../../store/my-list-slice';
 

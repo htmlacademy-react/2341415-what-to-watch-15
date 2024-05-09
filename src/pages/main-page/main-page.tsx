@@ -2,16 +2,15 @@ import FilmList from '../../components/cards/film-list';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
 import Footer from '../../components/footer/footer';
 import GenreTabs from '../../components/genre-tabs/genre-tabs';
-import Header from '../../components/genre-tabs/header/header';
+import Header from '../../components/header/header';
 import { ALL_GENRES } from '../../const';
 import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectPromoFilm, selectFilms, selectGenres } from '../../store/films-slice';
+import { selectPromoFilm, selectGenres, selectDisplayedFilms } from '../../store/films-slice';
 
 function MainPage(): JSX.Element {
 
   const filmGenres = useAppSelector(selectGenres);
-
-  const films = useAppSelector(selectFilms);
+  const films = useAppSelector(selectDisplayedFilms);
   const promoFilm = useAppSelector(selectPromoFilm);
 
   return (
@@ -62,7 +61,6 @@ function MainPage(): JSX.Element {
         <Footer />
       </div>
     </>
-
   );
 }
 

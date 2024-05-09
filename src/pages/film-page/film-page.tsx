@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import FilmTabs from '../../components/film-tabs/film-tabs';
 import Footer from '../../components/footer/footer';
-import Header from '../../components/genre-tabs/header/header';
+import Header from '../../components/header/header';
 import { Film } from '../../types';
 import { AppRoute, FilmTab } from '../../const';
 import FilmOverview from '../../components/film-tabs/film-overview';

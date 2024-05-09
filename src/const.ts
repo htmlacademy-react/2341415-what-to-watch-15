@@ -30,3 +30,5 @@ export enum FilmTab {
 }
 
 export const ALL_GENRES = 'All genres';
+
+export const DISPLAYED_FILMS_NUMBER = 8;
