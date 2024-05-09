@@ -1,17 +1,27 @@
+import { useEffect } from 'react';
 import FilmList from '../../components/cards/film-list';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
 import Footer from '../../components/footer/footer';
 import GenreTabs from '../../components/genre-tabs/genre-tabs';
 import Header from '../../components/header/header';
+import ShowMoreButton from '../../components/show-more-button/show-more-button';
 import { ALL_GENRES } from '../../const';
-import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectPromoFilm, selectGenres, selectDisplayedFilms } from '../../store/films-slice';
+import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { selectPromoFilm, selectGenres, selectDisplayedFilms, selectTotalFilmsNumber, selectDisplayedFilmsNumber, resetDisplayedFilmsNumber } from '../../store/films-slice';
 
 function MainPage(): JSX.Element {
 
+  const dispatch = useAppDispatch();
   const filmGenres = useAppSelector(selectGenres);
   const films = useAppSelector(selectDisplayedFilms);
   const promoFilm = useAppSelector(selectPromoFilm);
+  const totalFilmsNumber = useAppSelector(selectTotalFilmsNumber);
+  const displayedFilmsNumber = useAppSelector(selectDisplayedFilmsNumber);
+  const isAllFilmDisplayed = totalFilmsNumber === displayedFilmsNumber;
+
+  useEffect(() => () => {
+    dispatch(resetDisplayedFilmsNumber());
+  },[]);
 
   return (
     <>
@@ -53,9 +63,7 @@ function MainPage(): JSX.Element {
           <GenreTabs genres={[ALL_GENRES, ...filmGenres]} />
           <FilmList films={films} />
           <div className="catalog__more">
-            <button className="catalog__button" type="button">
-              Show more
-            </button>
+            {!isAllFilmDisplayed ? <ShowMoreButton /> : null}
           </div>
         </section>
         <Footer />
