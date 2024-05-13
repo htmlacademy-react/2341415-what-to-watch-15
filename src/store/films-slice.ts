@@ -14,13 +14,15 @@ type FilmsState = {
   promoFilm: Film;
   selectedGenre: string;
   displayedFilmsNumber: number;
+  filteredFilms: FilmListItem[];
 }
 
 const initialState: FilmsState = {
   films: filmList,
   promoFilm: promoFilm,
   selectedGenre: ALL_GENRES,
-  displayedFilmsNumber: DISPLAYED_FILMS_NUMBER_STEP
+  displayedFilmsNumber: DISPLAYED_FILMS_NUMBER_STEP,
+  filteredFilms: filmList
 };
 
 const filmsSlice = createSliceWithThunks({
@@ -29,15 +31,12 @@ const filmsSlice = createSliceWithThunks({
   selectors: {
     selectDisplayedFilms: createSelector(
       [
-        (state: FilmsState) => state.films,
-        (state: FilmsState) => state.selectedGenre,
+        (state: FilmsState) => state.filteredFilms,
         (state: FilmsState) => state.displayedFilmsNumber,
       ],
-      (films, selectedGenre, displayedFilmsNumber) => {
-        const filteredFilms = selectedGenre === ALL_GENRES ? films : films.filter((film) => selectedGenre === film.genre);
-        return filteredFilms.slice(0, displayedFilmsNumber);
-      }
+      (filteredFilms, displayedFilmsNumber) => filteredFilms.slice(0, displayedFilmsNumber)
     ),
+    selectFilteredFilmsNumber: (state) => state.filteredFilms.length,
     selectPromoFilm: (state) => state.promoFilm,
     selectTotalFilmsNumber: (state) => state.films.length,
     selectDisplayedFilmsNumber: (state) => state.displayedFilmsNumber,
@@ -51,8 +50,9 @@ const filmsSlice = createSliceWithThunks({
   },
   reducers: {
     setSelectedGenre(state, action: PayloadAction<string>) {
-      const { payload } = action;
-      state.selectedGenre = payload;
+      const { payload: selectedGenre } = action;
+      state.selectedGenre = selectedGenre;
+      state.filteredFilms = selectedGenre === ALL_GENRES ? state.films : state.films.filter((film) => selectedGenre === film.genre);
     },
     increaseDisplayedFilmsNumber(state) {
       state.displayedFilmsNumber = Math.min(state.films.length, state.displayedFilmsNumber + DISPLAYED_FILMS_NUMBER_STEP);
@@ -64,5 +64,5 @@ const filmsSlice = createSliceWithThunks({
 });
 
 export default filmsSlice;
-export const { selectPromoFilm, selectGenres, selectSelectedGenre, selectDisplayedFilms, selectDisplayedFilmsNumber, selectTotalFilmsNumber } = filmsSlice.selectors;
+export const { selectPromoFilm, selectGenres, selectSelectedGenre, selectDisplayedFilms, selectDisplayedFilmsNumber, selectTotalFilmsNumber, selectFilteredFilmsNumber } = filmsSlice.selectors;
 export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber } = filmsSlice.actions;

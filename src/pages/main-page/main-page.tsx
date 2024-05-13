@@ -7,7 +7,7 @@ import Header from '../../components/header/header';
 import ShowMoreButton from '../../components/show-more-button/show-more-button';
 import { ALL_GENRES } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
-import { selectPromoFilm, selectGenres, selectDisplayedFilms, selectTotalFilmsNumber, selectDisplayedFilmsNumber, resetDisplayedFilmsNumber } from '../../store/films-slice';
+import { selectPromoFilm, selectGenres, selectDisplayedFilms, selectDisplayedFilmsNumber, resetDisplayedFilmsNumber, selectFilteredFilmsNumber } from '../../store/films-slice';
 
 function MainPage(): JSX.Element {
 
@@ -15,13 +15,13 @@ function MainPage(): JSX.Element {
   const filmGenres = useAppSelector(selectGenres);
   const films = useAppSelector(selectDisplayedFilms);
   const promoFilm = useAppSelector(selectPromoFilm);
-  const totalFilmsNumber = useAppSelector(selectTotalFilmsNumber);
+  const filteredFilmsNumber = useAppSelector(selectFilteredFilmsNumber);
   const displayedFilmsNumber = useAppSelector(selectDisplayedFilmsNumber);
-  const isAllFilmDisplayed = totalFilmsNumber === displayedFilmsNumber;
+  const isAllFilmDisplayed = filteredFilmsNumber <= displayedFilmsNumber;
 
   useEffect(() => () => {
     dispatch(resetDisplayedFilmsNumber());
-  },[]);
+  },[dispatch]);
 
   return (
     <>
