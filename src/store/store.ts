@@ -5,6 +5,7 @@ import myListSlice from './my-list-slice';
 import playerSlice from './player-slice';
 import commentsSlice from './comments-slice';
 import userSlice from './user-slice';
+import { filmsApi } from '../services/films-api';
 
 export type State = ReturnType<typeof store.getState>;
 
@@ -22,6 +23,7 @@ const store = configureStore({
     getDefaultMiddleware({
       thunk: {
         extraArgument: {
+          filmsApi,
         },
       },
     }),
