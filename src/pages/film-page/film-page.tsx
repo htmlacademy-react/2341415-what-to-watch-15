@@ -55,7 +55,7 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
               </p>
               <div className="film-card__buttons">
                 <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} runTime={selectedFilm.runTime}/>
-                <Link to={`${AppRoute.Film}${selectedFilm.id}${AppRoute.FilmReview}`} className="btn film-card__button">
+                <Link to={`${AppRoute.Films}${selectedFilm.id}${AppRoute.FilmReview}`} className="btn film-card__button">
                   Add review
                 </Link>
               </div>

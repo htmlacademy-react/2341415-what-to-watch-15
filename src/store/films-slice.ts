@@ -1,6 +1,5 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Film, FilmListItem } from '../types';
-import { promoFilm } from '../fake-data/films';
 import { ALL_GENRES, DISPLAYED_FILMS_NUMBER_STEP } from '../const';
 import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
@@ -12,18 +11,22 @@ const createSliceWithThunks = buildCreateSlice({
 
 type FilmsState = {
   films: FilmListItem[];
-  promoFilm: Film;
+  promoFilm: Film | null;
   selectedGenre: string;
   displayedFilmsNumber: number;
   filteredFilms: FilmListItem[];
+  isFilmsLoading: boolean;
+  isPromoFilmLoading: boolean;
 }
 
 const initialState: FilmsState = {
   films: [],
-  promoFilm: promoFilm,
+  promoFilm: null,
   selectedGenre: ALL_GENRES,
   displayedFilmsNumber: DISPLAYED_FILMS_NUMBER_STEP,
-  filteredFilms: []
+  filteredFilms: [],
+  isFilmsLoading: false,
+  isPromoFilmLoading: false,
 };
 
 function getFilteredFilmsByGenre(films: FilmListItem[], genre: string): FilmListItem[] {
@@ -45,6 +48,8 @@ const filmsSlice = createSliceWithThunks({
     selectPromoFilm: (state) => state.promoFilm,
     selectTotalFilmsNumber: (state) => state.films.length,
     selectDisplayedFilmsNumber: (state) => state.displayedFilmsNumber,
+    selectIsFilmsLoading: (state) => state.isFilmsLoading,
+    selectIsPromoFilmLoading: (state) => state.isPromoFilmLoading,
     selectGenres: createSelector(
       [
         (state: FilmsState) => state.films,
@@ -75,9 +80,33 @@ const filmsSlice = createSliceWithThunks({
           const { payload: films } = action;
           state.films = action.payload;
           state.filteredFilms = getFilteredFilmsByGenre(films, state.selectedGenre);
+          state.isFilmsLoading = false;
         },
+        pending: (state) => {
+          state.isFilmsLoading = true;
+        },
+        rejected: (state) => {
+          state.isFilmsLoading = false;
+        }
       }
     ),
+    fetchPromoAction: create.asyncThunk<Film, undefined, { extra: { filmsApi: FilmsApi }}>(
+      async (_arg, { extra: { filmsApi } }) => filmsApi.getPromo().catch((err) => {
+        throw err;
+      }),
+      {
+        fulfilled: (state, action) => {
+          state.promoFilm = action.payload;
+          state.isPromoFilmLoading = false;
+        },
+        pending: (state) => {
+          state.isPromoFilmLoading = true;
+        },
+        rejected: (state) => {
+          state.isPromoFilmLoading = false;
+        }
+      }
+    )
   }),
 });
 
@@ -89,6 +118,8 @@ export const {
   selectDisplayedFilms,
   selectDisplayedFilmsNumber,
   selectTotalFilmsNumber,
-  selectFilteredFilmsNumber
+  selectFilteredFilmsNumber,
+  selectIsFilmsLoading,
+  selectIsPromoFilmLoading
 } = filmsSlice.selectors;
-export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber, fetchFilmsAction } = filmsSlice.actions;
+export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber, fetchFilmsAction, fetchPromoAction } = filmsSlice.actions;

@@ -8,18 +8,22 @@ export enum AppRoute {
   Main = '/',
   Login = '/login',
   MyList = '/mylist',
-  Film = '/films/',
+  Films = '/films/',
   Id = ':id',
   FilmReview = '/review',
   Player = '/player/'
+}
+export enum ServerRoute {
+  Films = '/films',
+  Promo = '/promo'
 }
 
 export enum PageRoute {
   Main = AppRoute.Main,
   Login = AppRoute.Login,
   MyList = AppRoute.MyList,
-  Film = `${AppRoute.Film}${AppRoute.Id}`,
-  FilmReview = `${AppRoute.Film}${AppRoute.Id}${AppRoute.FilmReview}`,
+  Film = `${AppRoute.Films}${AppRoute.Id}`,
+  FilmReview = `${AppRoute.Films}${AppRoute.Id}${AppRoute.FilmReview}`,
   Player = `${AppRoute.Player}${AppRoute.Id}`
 }
 
@@ -32,3 +36,4 @@ export enum FilmTab {
 export const ALL_GENRES = 'All genres';
 
 export const DISPLAYED_FILMS_NUMBER_STEP = 8;
+

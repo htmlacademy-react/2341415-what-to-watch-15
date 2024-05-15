@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import FilmList from '../../components/cards/film-list';
-import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
 import Footer from '../../components/footer/footer';
 import GenreTabs from '../../components/genre-tabs/genre-tabs';
 import Header from '../../components/header/header';
@@ -8,6 +7,7 @@ import ShowMoreButton from '../../components/show-more-button/show-more-button';
 import { ALL_GENRES } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
 import { selectPromoFilm, selectGenres, selectDisplayedFilms, selectDisplayedFilmsNumber, resetDisplayedFilmsNumber, selectFilteredFilmsNumber } from '../../store/films-slice';
+import PromoFilm from '../../components/promo-film/promo-film';
 
 function MainPage(): JSX.Element {
 
@@ -35,26 +35,7 @@ function MainPage(): JSX.Element {
         <h1 className="visually-hidden">WTW</h1>
         <Header className='film-card__head'>{null}</Header>
         <div className="film-card__wrap">
-          <div className="film-card__info">
-            <div className="film-card__poster">
-              <img
-                src="img/the-grand-budapest-hotel-poster.jpg"
-                alt="The Grand Budapest Hotel poster"
-                width={218}
-                height={327}
-              />
-            </div>
-            <div className="film-card__desc">
-              <h2 className="film-card__title">{promoFilm.name}</h2>
-              <p className="film-card__meta">
-                <span className="film-card__genre">{promoFilm.genre}</span>
-                <span className="film-card__year">{promoFilm.released}</span>
-              </p>
-              <div className="film-card__buttons">
-                <FilmCardButtons id={promoFilm.id} videoLink={promoFilm.videoLink} runTime={promoFilm.runTime} />
-              </div>
-            </div>
-          </div>
+          {promoFilm ? <PromoFilm promoFilm={promoFilm} /> : null}
         </div>
       </section>
       <div className="page-content">

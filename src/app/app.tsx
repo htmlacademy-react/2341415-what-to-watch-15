@@ -10,9 +10,21 @@ import AddReviewPage from '../pages/add-review-page/add-review-page';
 import ConditionalRoute from '../components/conditional-route/conditional-route';
 import { useAppSelector } from '../hooks/app-dispatch';
 import { selectAuthStatus } from '../store/user-slice';
+import LoadingPage from '../pages/loading-page/loading-page';
+import { selectIsFilmsLoading } from '../store/films-slice';
 
+function getOnLoadingRoutes() {
+  return (
+    <>
+      {Object.values(PageRoute).map((route) => <Route key={route} path={route} element={<LoadingPage/>}></Route>)}
+      <Route path='*' element={<NotFoundPage />} />
+    </>
+  );
+}
 function App(): JSX.Element {
   const authorizationStatus = useAppSelector(selectAuthStatus);
+  const isFilmsLoading = useAppSelector(selectIsFilmsLoading);
+  const isLoading = isFilmsLoading;
 
   function getInitializedAppRoutes() {
     return (
@@ -41,7 +53,7 @@ function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        {getInitializedAppRoutes()}
+        {isLoading ? getOnLoadingRoutes() : getInitializedAppRoutes()}
       </Routes>
     </BrowserRouter>
   );
