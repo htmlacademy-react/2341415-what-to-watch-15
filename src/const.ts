@@ -15,7 +15,9 @@ export enum AppRoute {
 }
 export enum ServerRoute {
   Films = '/films',
-  Promo = '/promo'
+  Promo = '/promo',
+  LogIn = '/login',
+  Logout = '/logout',
 }
 
 export enum PageRoute {

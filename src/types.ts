@@ -34,3 +34,15 @@ export type Comment = {
   comment: string;
   rating: number;
 };
+
+export type User = {
+  email: string;
+  token: string;
+  name: string;
+  avatarUrl: string;
+};
+
+export type AuthData = {
+  login: string;
+  password: string;
+};
