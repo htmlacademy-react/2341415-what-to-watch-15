@@ -39,3 +39,5 @@ export const ALL_GENRES = 'All genres';
 
 export const DISPLAYED_FILMS_NUMBER_STEP = 8;
 
+export const TIMEOUT_SHOW_ERROR = 3000;
+

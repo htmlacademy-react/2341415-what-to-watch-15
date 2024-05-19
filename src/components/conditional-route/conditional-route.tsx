@@ -10,15 +10,7 @@ type Props = {
 function ConditionalRoute(props: Props): JSX.Element {
   const { condition, children, routOnFalse } = props;
 
-  function getLocation() {
-    if (condition) {
-      return children;
-    }
-
-    return <Navigate to={routOnFalse} replace />;
-  }
-
-  return getLocation();
+  return condition ? children : <Navigate to={routOnFalse} replace />;
 }
 
 export default ConditionalRoute;

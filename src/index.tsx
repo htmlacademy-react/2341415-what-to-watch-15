@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store/store';
 import { StrictMode } from 'react';
 import { fetchFilmsAction, fetchPromoAction } from './store/films-slice';
+import { checkAuthAction } from './store/user-slice';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,6 +12,7 @@ const root = ReactDOM.createRoot(
 
 store.dispatch(fetchFilmsAction());
 store.dispatch(fetchPromoAction());
+store.dispatch(checkAuthAction());
 
 root.render(
   <StrictMode>

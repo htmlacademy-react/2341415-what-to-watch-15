@@ -9,9 +9,10 @@ import PlayerPage from '../pages/player/player.-page';
 import AddReviewPage from '../pages/add-review-page/add-review-page';
 import ConditionalRoute from '../components/conditional-route/conditional-route';
 import { useAppSelector } from '../hooks/app-dispatch';
-import { selectAuthStatus } from '../store/user-slice';
+import { selectAuthorizationStatus } from '../store/user-slice';
 import LoadingPage from '../pages/loading-page/loading-page';
 import { selectIsFilmsLoading } from '../store/films-slice';
+import ErrorMessage from '../components/error-message/error-message';
 
 function getOnLoadingRoutes() {
   return (
@@ -22,7 +23,7 @@ function getOnLoadingRoutes() {
   );
 }
 function App(): JSX.Element {
-  const authorizationStatus = useAppSelector(selectAuthStatus);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const isFilmsLoading = useAppSelector(selectIsFilmsLoading);
   const isLoading = isFilmsLoading;
 
@@ -51,11 +52,14 @@ function App(): JSX.Element {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {isLoading ? getOnLoadingRoutes() : getInitializedAppRoutes()}
-      </Routes>
-    </BrowserRouter>
+    <>
+      <ErrorMessage />
+      <BrowserRouter>
+        <Routes>
+          {isLoading ? getOnLoadingRoutes() : getInitializedAppRoutes()}
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

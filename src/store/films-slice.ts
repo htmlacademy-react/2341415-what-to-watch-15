@@ -91,7 +91,7 @@ const filmsSlice = createSliceWithThunks({
       }
     ),
     fetchPromoAction: create.asyncThunk<Film, undefined, { extra: { filmsApi: FilmsApi }}>(
-      async (_arg, { extra: { filmsApi } }) => filmsApi.getPromo().catch((err) => {
+      (_arg, { extra: { filmsApi } }) => filmsApi.getPromo().catch((err) => {
         throw err;
       }),
       {
