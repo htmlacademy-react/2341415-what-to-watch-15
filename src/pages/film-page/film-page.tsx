@@ -12,7 +12,7 @@ import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectComments } from '../../store/comments-slice';
 import { Link } from 'react-router-dom';
 import FilmList from '../../components/cards/film-list';
-import { selectSimilarFilms } from '../../store/film-slice';
+import { selectSimilarFilms } from '../../store/similar-films-slice';
 
 type Props = {
   selectedFilm: Film;

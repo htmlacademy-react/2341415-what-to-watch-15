@@ -3,7 +3,8 @@ import { AuthorizationStatus } from '../const';
 import { AuthData, User } from '../types';
 import { getToken } from '../services/token';
 import { UserApi } from '../services/user-api';
-import { handleError } from '../services/handle-error';
+import { getMessage } from '../services/handle-error';
+import { setErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -41,7 +42,7 @@ const userSlice = createSliceWithThunks({
   reducers: (create) => ({
     loginAction: create.asyncThunk<User, AuthData , { extra: { userApi: UserApi }}>(
       (authData, { extra: { userApi } }) => userApi.login(authData).catch((err) => {
-        handleError(err);
+        setErrorMessage(getMessage(err));
         throw err;
       }),
       {
