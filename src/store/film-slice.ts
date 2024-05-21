@@ -42,6 +42,7 @@ const filmSlice = createSliceWithThunks({
           state.isFilmLoading = false;
         },
         pending: (state) => {
+          state.selectedFilm = null;
           state.isFilmLoading = true;
         },
         rejected: (state, action) => {

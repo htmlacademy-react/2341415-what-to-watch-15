@@ -18,6 +18,8 @@ export enum ServerRoute {
   Promo = '/promo',
   LogIn = '/login',
   Logout = '/logout',
+  Similar = '/similar',
+  Comments = '/comments'
 }
 
 export enum PageRoute {
@@ -25,14 +27,14 @@ export enum PageRoute {
   Login = AppRoute.Login,
   MyList = AppRoute.MyList,
   Film = `${AppRoute.Films}${AppRoute.Id}`,
-  FilmReview = `${AppRoute.Films}${AppRoute.Id}${AppRoute.FilmReview}`,
+  FilmComment = `${AppRoute.Films}${AppRoute.Id}${AppRoute.FilmReview}`,
   Player = `${AppRoute.Player}${AppRoute.Id}`
 }
 
 export enum FilmTab {
   OverView = 'OverView',
   Details = 'Details',
-  Reviews = 'Reviews'
+  Comments = 'Comments'
 }
 
 export const ALL_GENRES = 'All genres';
@@ -40,3 +42,5 @@ export const ALL_GENRES = 'All genres';
 export const DISPLAYED_FILMS_NUMBER_STEP = 8;
 
 export const TIMEOUT_SHOW_ERROR = 3000;
+
+export const DEFAULT_SIMILAR_COUNT = 4;

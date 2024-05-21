@@ -2,8 +2,8 @@ import { useState } from 'react';
 import FilmTabs from '../../components/film-tabs/film-tabs';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
-import { Film } from '../../types';
-import { AppRoute, FilmTab } from '../../const';
+import { Film, FilmListItem } from '../../types';
+import { AppRoute, AuthorizationStatus, FilmTab } from '../../const';
 import FilmOverview from '../../components/film-tabs/film-overview';
 import FilmDetails from '../../components/film-tabs/film-details';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
@@ -12,17 +12,18 @@ import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectComments } from '../../store/comments-slice';
 import { Link } from 'react-router-dom';
 import FilmList from '../../components/cards/film-list';
-import { selectSimilarFilms } from '../../store/similar-films-slice';
+import { selectAuthorizationStatus } from '../../store/user-slice';
 
 type Props = {
   selectedFilm: Film;
+  similarFilms: FilmListItem[];
 };
 
-function FilmPage({ selectedFilm }: Props): JSX.Element {
+function FilmPage({ selectedFilm, similarFilms }: Props): JSX.Element {
   const { name, genre, released, posterImage, backgroundImage, id } = selectedFilm;
   const [selectedTab, setSelectedTab] = useState<FilmTab>(FilmTab.OverView);
   const reviews = useAppSelector(selectComments);
-  const similarFilms = useAppSelector(selectSimilarFilms);
+  const authStatus = useAppSelector(selectAuthorizationStatus);
 
   function getTabContent(tab: FilmTab): JSX.Element {
     if(tab === FilmTab.OverView) {
@@ -31,7 +32,7 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
     if(tab === FilmTab.Details) {
       return <FilmDetails selectedFilm={selectedFilm} />;
     }
-    return <CommentsList reviews={reviews} />;
+    return <CommentsList comments={reviews} />;
   }
 
   return (
@@ -55,9 +56,9 @@ function FilmPage({ selectedFilm }: Props): JSX.Element {
               </p>
               <div className="film-card__buttons">
                 <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} runTime={selectedFilm.runTime}/>
-                <Link to={`${AppRoute.Films}${selectedFilm.id}${AppRoute.FilmReview}`} className="btn film-card__button">
-                  Add review
-                </Link>
+                {authStatus === AuthorizationStatus.Auth
+                  ? <Link to={`${AppRoute.Films}${selectedFilm.id}${AppRoute.FilmReview}`} className="btn film-card__button">Add review</Link>
+                  : null}
               </div>
             </div>
           </div>

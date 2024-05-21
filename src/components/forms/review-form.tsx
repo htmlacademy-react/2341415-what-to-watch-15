@@ -1,9 +1,16 @@
 import { FormEvent, useState } from 'react';
+import { useAppDispatch } from '../../hooks/app-dispatch';
+import { addCommentAction } from '../../store/comments-slice';
 
-function ReviewForm(): JSX.Element {
+type Props = {
+  id: string;
+}
+
+function ReviewForm({ id }: Props): JSX.Element {
 
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
+  const dispatch = useAppDispatch();
 
   function handleRatingChange(evt: FormEvent<HTMLInputElement>) {
     const newRating = parseInt((evt.target as HTMLInputElement).value, 10);
@@ -14,6 +21,12 @@ function ReviewForm(): JSX.Element {
     evt.preventDefault();
     setReview(evt.currentTarget.value);
   }
+
+  function handleFormSubmit(evt: FormEvent<HTMLButtonElement>) {
+    evt.preventDefault();
+    dispatch(addCommentAction({ comment: review, rating, id }));
+  }
+
   return (
     <form action="#" className="add-review__form">
       <div className="rating">
@@ -151,7 +164,7 @@ function ReviewForm(): JSX.Element {
           defaultValue={review}
         />
         <div className="add-review__submit">
-          <button className="add-review__btn" type="submit">
+          <button onClick={handleFormSubmit} className="add-review__btn" type="submit">
             Post
           </button>
         </div>

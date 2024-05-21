@@ -1,10 +1,14 @@
 import ReviewForm from '../../components/forms/review-form';
 import Header from '../../components/header/header';
-import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectSelectedFilm } from '../../store/film-slice';
+import { Film } from '../../types';
 
-function AddReviewPage(): JSX.Element {
-  const selectedFilm = useAppSelector(selectSelectedFilm);
+type Props = {
+  selectedFilm: Film;
+}
+
+function AddReviewPage({ selectedFilm }: Props): JSX.Element {
+
+  const id = selectedFilm.id;
 
   return (
     <section className="film-card film-card--full">
@@ -41,7 +45,7 @@ function AddReviewPage(): JSX.Element {
         </div>
       </div>
       <div className="add-review">
-        <ReviewForm />
+        <ReviewForm id={id} />
       </div>
     </section>
   );

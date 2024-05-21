@@ -8,6 +8,8 @@ import userSlice from './user-slice';
 import { filmsApi } from '../services/films-api';
 import { userApi } from '../services/user-api';
 import errorSlice from './error-slice';
+import similarFilmsSlice from './similar-films-slice';
+import { commentsApi } from '../services/comments-api';
 
 export type State = ReturnType<typeof store.getState>;
 
@@ -21,6 +23,7 @@ const store = configureStore({
     comments: commentsSlice.reducer,
     user: userSlice.reducer,
     error: errorSlice.reducer,
+    similarFilms: similarFilmsSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -28,6 +31,7 @@ const store = configureStore({
         extraArgument: {
           filmsApi,
           userApi,
+          commentsApi,
         },
       },
     }),

@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { getToken } from './token';
-// import { processErrorHandle } from './process-error-handle';
 
 const BACKEND_URL = 'https://15.design.htmlacademy.pro/wtw';
 
