@@ -35,8 +35,8 @@ const similarFilmsSlice = createSliceWithThunks({
       state.notFoundSimilar = false;
     }),
     fetchSimilarFilmsAction: create.asyncThunk<FilmListItem[], string, { extra: { filmsApi: FilmsApi }}>(
-      async (id, { extra: { filmsApi } }) => filmsApi.getSimilar(id).catch((err) => {
-        setErrorMessage(getMessage(err));
+      async (id, { extra: { filmsApi }, dispatch }) => filmsApi.getSimilar(id).catch((err) => {
+        dispatch(setErrorMessage(getMessage(err)));
         throw err;
       }),
       {

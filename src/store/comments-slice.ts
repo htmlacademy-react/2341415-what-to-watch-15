@@ -29,6 +29,9 @@ const commentsSlice = createSliceWithThunks({
     selectIsCommentAddingInProgress: (state) => state.isCommentAddingInProgress,
   },
   reducers: (create) => ({
+    resetCommentWasAddedAction: create.reducer((state) => {
+      state.isCommentWasAdded = false;
+    }),
     fetchCommentsAction: create.asyncThunk<Comment[], string, { extra: { commentsApi: CommentsApi }}>(
       async (id, { extra: { commentsApi } }) => commentsApi.getList(id).catch((err) => {
         setErrorMessage(getMessage(err));
@@ -43,28 +46,33 @@ const commentsSlice = createSliceWithThunks({
         },
       }
     ),
-    addCommentAction: create.asyncThunk<Comment, UserComment, { extra: { commentsApi: CommentsApi }}>(
-      (userComment, { extra: { commentsApi } }) => commentsApi.sendComment(userComment).catch((err) => {
-        setErrorMessage(getMessage(err));
-        throw err;
-      }),
-      {
-        fulfilled: (state, action) => {
-          state.isCommentAddingInProgress = false;
-          state.comments = [action.payload,...state.comments];
-          state.isCommentWasAdded = true;
-        },
-        pending: (state) => {
-          state.isCommentAddingInProgress = true;
-        },
-        rejected: (state) => {
-          state.isCommentAddingInProgress = false;
-        }
+    addCommentAction: create.asyncThunk<Comment, { comment: UserComment; onSuccess: () => void }, { extra: { commentsApi: CommentsApi }}>(
+      ({ comment, onSuccess }, { extra: { commentsApi }, dispatch }) => commentsApi.sendComment(comment)
+        .then((res) => {
+          onSuccess();
+          return res;
+        })
+        .catch((err) => {
+          dispatch(setErrorMessage(getMessage(err)));
+          throw err;
+        }),
+    {
+      fulfilled: (state, action) => {
+        state.isCommentAddingInProgress = false;
+        state.comments = [action.payload,...state.comments];
+        state.isCommentWasAdded = true;
+      },
+      pending: (state) => {
+        state.isCommentAddingInProgress = true;
+      },
+      rejected: (state) => {
+        state.isCommentAddingInProgress = false;
       }
+    }
     ),
   }),
 });
 
 export default commentsSlice;
 export const { selectComments, selectCommentWasAdded, selectIsCommentAddingInProgress } = commentsSlice.selectors;
-export const { fetchCommentsAction, addCommentAction } = commentsSlice.actions;
+export const { fetchCommentsAction, addCommentAction, resetCommentWasAddedAction } = commentsSlice.actions;

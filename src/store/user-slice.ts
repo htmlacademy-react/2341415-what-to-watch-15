@@ -41,8 +41,8 @@ const userSlice = createSliceWithThunks({
   },
   reducers: (create) => ({
     loginAction: create.asyncThunk<User, AuthData , { extra: { userApi: UserApi }}>(
-      (authData, { extra: { userApi } }) => userApi.login(authData).catch((err) => {
-        setErrorMessage(getMessage(err));
+      (authData, { extra: { userApi }, dispatch }) => userApi.login(authData).catch((err) => {
+        dispatch(setErrorMessage(getMessage(err)));
         throw err;
       }),
       {

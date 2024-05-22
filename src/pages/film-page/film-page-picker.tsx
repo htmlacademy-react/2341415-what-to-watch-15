@@ -31,6 +31,7 @@ function FilmPagePicker(): JSX.Element | null{
         dispatch(fetchSimilarFilmsAction(id));
         dispatch(fetchCommentsAction(id));
       }
+
     },
     [selectedFilm, id, isSelectedFilmLoading, isSelectedFilmNotFound, isSimilarFilmsLoading, isSimilarNotFound, dispatch]
   );

@@ -43,7 +43,15 @@ function App(): JSX.Element {
         <Route path={PageRoute.Login} element={<LoginPage />} />
         <Route path={PageRoute.Film} element={<FilmPagePicker />} />
         <Route path={PageRoute.Player} element={<PlayerPage />} />
-        <Route path={PageRoute.FilmComment} element={<AddReviewPagePicker />} />
+        <Route path={PageRoute.FilmComment} element={
+          <ConditionalRoute
+            condition={authorizationStatus === AuthorizationStatus.Auth}
+            routOnFalse={PageRoute.Login}
+          >
+            <AddReviewPagePicker />
+          </ConditionalRoute>
+        }
+        />
         <Route path='*' element={<NotFoundPage />} />
       </>
     );
