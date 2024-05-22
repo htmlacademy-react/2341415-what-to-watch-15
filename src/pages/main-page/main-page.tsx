@@ -1,27 +1,27 @@
+import { useEffect } from 'react';
 import FilmList from '../../components/cards/film-list';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
 import Footer from '../../components/footer/footer';
 import GenreTabs from '../../components/genre-tabs/genre-tabs';
-import Header from '../../components/genre-tabs/header/header';
-import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectPromoFilm, selectFilms } from '../../store/films-slice';
+import Header from '../../components/header/header';
+import ShowMoreButton from '../../components/show-more-button/show-more-button';
+import { ALL_GENRES } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { selectPromoFilm, selectGenres, selectDisplayedFilms, selectDisplayedFilmsNumber, resetDisplayedFilmsNumber, selectFilteredFilmsNumber } from '../../store/films-slice';
 
 function MainPage(): JSX.Element {
-  const genres = [
-    'All genres',
-    'Comedies',
-    'Crime',
-    'Documentary',
-    'Dramas',
-    'Horror',
-    'Kids &amp; Family',
-    'Romance',
-    'Sci-Fi',
-    'Thrillers',
-  ];
 
-  const films = useAppSelector(selectFilms);
+  const dispatch = useAppDispatch();
+  const filmGenres = useAppSelector(selectGenres);
+  const films = useAppSelector(selectDisplayedFilms);
   const promoFilm = useAppSelector(selectPromoFilm);
+  const filteredFilmsNumber = useAppSelector(selectFilteredFilmsNumber);
+  const displayedFilmsNumber = useAppSelector(selectDisplayedFilmsNumber);
+  const isAllFilmDisplayed = filteredFilmsNumber <= displayedFilmsNumber;
+
+  useEffect(() => () => {
+    dispatch(resetDisplayedFilmsNumber());
+  },[dispatch]);
 
   return (
     <>
@@ -60,18 +60,15 @@ function MainPage(): JSX.Element {
       <div className="page-content">
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
-          <GenreTabs genres={genres} />
+          <GenreTabs genres={[ALL_GENRES, ...filmGenres]} />
           <FilmList films={films} />
           <div className="catalog__more">
-            <button className="catalog__button" type="button">
-              Show more
-            </button>
+            {!isAllFilmDisplayed ? <ShowMoreButton /> : null}
           </div>
         </section>
         <Footer />
       </div>
     </>
-
   );
 }
 

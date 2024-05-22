@@ -1,10 +1,13 @@
+import cn from 'classnames';
+
 type Props = {
   genre: string;
+  selectedGenre: string;
 };
 
-function GenreTabsItem({ genre }: Props): JSX.Element {
+function GenreTabsItem({ genre, selectedGenre }: Props): JSX.Element {
   return (
-    <li className="catalog__genres-item catalog__genres-item--active">
+    <li className={cn('catalog__genres-item', { 'catalog__genres-item--active': genre === selectedGenre })}>
       <a href="#" className="catalog__genres-link">{genre}</a>
     </li>
   );

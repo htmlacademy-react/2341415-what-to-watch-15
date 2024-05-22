@@ -29,4 +29,6 @@ export enum FilmTab {
   Reviews = 'Reviews'
 }
 
-// Main (/), Sign In (/login), MyList (/mylist), Film (/films/:id), Add review (/films/:id/review), Player (/player/:id).
+export const ALL_GENRES = 'All genres';
+
+export const DISPLAYED_FILMS_NUMBER_STEP = 8;

@@ -1,5 +1,5 @@
 import ReviewForm from '../../components/forms/review-form';
-import Header from '../../components/genre-tabs/header/header';
+import Header from '../../components/header/header';
 import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectSelectedFilm } from '../../store/film-slice';
 
