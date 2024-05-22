@@ -1,54 +1,54 @@
 import { useParams } from 'react-router-dom';
-
-// import { ERROR, IS_LOADING, NOT_FOUND } from '../../const';
-import { useAppSelector } from '../../hooks/app-dispatch';
-// import NotFoundPage from '../error-screen/error-404-screen';
-// import LoadingScreen from '../loading-screen/loading-screen';
-// import OfferScreen from './offer-screen';
-// import { fetchOfferCardDataAction, selectComments, selectNeighbours, selectSelectedOfferCard } from '../../store/offer-card-slice';
-// import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
 import FilmPage from './film-page';
-import { selectSelectedFilm } from '../../store/film-slice';
+import { fetchFilmAction, selectIsFilmLoading, selectIsFilmNotFound, selectSelectedFilm } from '../../store/film-slice';
+import { useEffect } from 'react';
+import LoadingPage from '../loading-page/loading-page';
+import NotFoundPage from '../not-found-page/not-found-page';
+import { fetchSimilarFilmsAction, selectIsSimilarFilmsLoading, selectIsSimilarFilmsNotFound, selectSimilarFilms } from '../../store/similar-films-slice';
+import { fetchCommentsAction } from '../../store/comments-slice';
 
 function FilmPagePicker(): JSX.Element | null{
   const { id } = useParams();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const selectedFilm = useAppSelector(selectSelectedFilm);
-  // const neighbours = useAppSelector(selectNeighbours);
-  // const comments = useAppSelector(selectComments);
+  const similarFilms = useAppSelector(selectSimilarFilms);
+  const isSelectedFilmLoading = useAppSelector(selectIsFilmLoading);
+  const isSimilarFilmsLoading = useAppSelector(selectIsSimilarFilmsLoading);
+  const isSelectedFilmNotFound = useAppSelector(selectIsFilmNotFound);
+  const isSimilarNotFound = useAppSelector(selectIsSimilarFilmsNotFound);
 
-  // useEffect(
-  //   () => {
-  //     if (id && selectedOffer === null) {
-  //       dispatch(fetchOfferCardDataAction(id));
-  //     }
-  //   },
-  //   [selectedOffer, id, dispatch]
-  // );
+  useEffect(
+    () => {
+      if (
+        id
+        && (selectedFilm === null || selectedFilm.id !== id)
+        && isSelectedFilmLoading === false
+        && isSelectedFilmNotFound !== true
+      ) {
+        dispatch(fetchFilmAction(id));
+        dispatch(fetchSimilarFilmsAction(id));
+        dispatch(fetchCommentsAction(id));
+      }
 
-  // if (id === undefined) {
-  //   return <NotFoundPage />;
-  // }
+    },
+    [selectedFilm, id, isSelectedFilmLoading, isSelectedFilmNotFound, isSimilarFilmsLoading, isSimilarNotFound, dispatch]
+  );
 
-  // if (selectedOffer === IS_LOADING) {
-  //   return <LoadingScreen />;
-  // }
+  if (isSelectedFilmLoading || isSimilarFilmsLoading) {
+    return <LoadingPage />;
+  }
 
-  // if (selectedOffer === NOT_FOUND){
-  //   return <NotFoundPage />;
-  // }
+  if (id === undefined || isSelectedFilmNotFound) {
+    return <NotFoundPage />;
+  }
 
-  // if (selectedOffer === null) {
-  //   return <LoadingScreen />;
-  // }
+  if (selectedFilm === null) {
+    return <LoadingPage />;
+  }
 
-  // if (selectedOffer === ERROR) {
-  //   return null;
-  // }
-
-  // return <OfferScreen selectedOffer={selectedOffer} neighbours={neighbours} comments={comments}/>;
-  return <FilmPage selectedFilm={selectedFilm} />;
+  return <FilmPage selectedFilm={selectedFilm} similarFilms={similarFilms} />;
 }
 
 export default FilmPagePicker;

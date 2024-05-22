@@ -2,17 +2,17 @@ import { Comment } from '../../types';
 import { format } from 'date-fns';
 
 type Props = {
-  review: Comment;
+  comment: Comment;
 };
 
-function CommentItemOfAList({ review }: Props): JSX.Element {
-  const { comment, date, rating, user } = review;
+function CommentItemOfAList({ comment }: Props): JSX.Element {
+  const { comment: commentItem, date, rating, user } = comment;
 
   return (
     <div className="review">
       <blockquote className="review__quote">
         <p className="review__text">
-          {comment}
+          {commentItem}
         </p>
         <footer className="review__details">
           <cite className="review__author">{user}</cite>

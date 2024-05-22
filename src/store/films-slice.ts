@@ -1,9 +1,9 @@
-import { buildCreateSlice, asyncThunkCreator, PayloadAction } from '@reduxjs/toolkit';
+import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Film, FilmListItem } from '../types';
-import { films as filmList, promoFilm } from '../fake-data/films';
 import { ALL_GENRES, DISPLAYED_FILMS_NUMBER_STEP } from '../const';
 import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
+import { FilmsApi } from '../services/films-api';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -11,19 +11,27 @@ const createSliceWithThunks = buildCreateSlice({
 
 type FilmsState = {
   films: FilmListItem[];
-  promoFilm: Film;
+  promoFilm: Film | null;
   selectedGenre: string;
   displayedFilmsNumber: number;
   filteredFilms: FilmListItem[];
+  isFilmsLoading: boolean;
+  isPromoFilmLoading: boolean;
 }
 
 const initialState: FilmsState = {
-  films: filmList,
-  promoFilm: promoFilm,
+  films: [],
+  promoFilm: null,
   selectedGenre: ALL_GENRES,
   displayedFilmsNumber: DISPLAYED_FILMS_NUMBER_STEP,
-  filteredFilms: filmList
+  filteredFilms: [],
+  isFilmsLoading: false,
+  isPromoFilmLoading: false,
 };
+
+function getFilteredFilmsByGenre(films: FilmListItem[], genre: string): FilmListItem[] {
+  return genre === ALL_GENRES ? films : films.filter((film) => genre === film.genre);
+}
 
 const filmsSlice = createSliceWithThunks({
   name: 'films',
@@ -40,6 +48,8 @@ const filmsSlice = createSliceWithThunks({
     selectPromoFilm: (state) => state.promoFilm,
     selectTotalFilmsNumber: (state) => state.films.length,
     selectDisplayedFilmsNumber: (state) => state.displayedFilmsNumber,
+    selectIsFilmsLoading: (state) => state.isFilmsLoading,
+    selectIsPromoFilmLoading: (state) => state.isPromoFilmLoading,
     selectGenres: createSelector(
       [
         (state: FilmsState) => state.films,
@@ -48,21 +58,68 @@ const filmsSlice = createSliceWithThunks({
     ),
     selectSelectedGenre: (state) => state.selectedGenre
   },
-  reducers: {
-    setSelectedGenre(state, action: PayloadAction<string>) {
+  reducers: (create) => ({
+    setSelectedGenre: create.reducer<string>((state, action) => {
       const { payload: selectedGenre } = action;
       state.selectedGenre = selectedGenre;
-      state.filteredFilms = selectedGenre === ALL_GENRES ? state.films : state.films.filter((film) => selectedGenre === film.genre);
-    },
-    increaseDisplayedFilmsNumber(state) {
+      state.filteredFilms = getFilteredFilmsByGenre(state.films, selectedGenre);
+    }),
+    increaseDisplayedFilmsNumber: create.reducer((state) => {
       state.displayedFilmsNumber = Math.min(state.films.length, state.displayedFilmsNumber + DISPLAYED_FILMS_NUMBER_STEP);
-    },
-    resetDisplayedFilmsNumber(state) {
+    }),
+    resetDisplayedFilmsNumber: create.reducer((state) => {
       state.displayedFilmsNumber = DISPLAYED_FILMS_NUMBER_STEP;
-    }
-  },
+    }),
+    fetchFilmsAction: create.asyncThunk<FilmListItem[], undefined, { extra: { filmsApi: FilmsApi }}>(
+      async (_arg, { extra: { filmsApi } }) => filmsApi.getList().catch((err) => {
+      // showErrorMessage('loading error', dispatch);
+        throw err;
+      }),
+      {
+        fulfilled: (state, action) => {
+          const { payload: films } = action;
+          state.films = action.payload;
+          state.filteredFilms = getFilteredFilmsByGenre(films, state.selectedGenre);
+          state.isFilmsLoading = false;
+        },
+        pending: (state) => {
+          state.isFilmsLoading = true;
+        },
+        rejected: (state) => {
+          state.isFilmsLoading = false;
+        }
+      }
+    ),
+    fetchPromoAction: create.asyncThunk<Film, undefined, { extra: { filmsApi: FilmsApi }}>(
+      (_arg, { extra: { filmsApi } }) => filmsApi.getPromo().catch((err) => {
+        throw err;
+      }),
+      {
+        fulfilled: (state, action) => {
+          state.promoFilm = action.payload;
+          state.isPromoFilmLoading = false;
+        },
+        pending: (state) => {
+          state.isPromoFilmLoading = true;
+        },
+        rejected: (state) => {
+          state.isPromoFilmLoading = false;
+        }
+      }
+    )
+  }),
 });
 
 export default filmsSlice;
-export const { selectPromoFilm, selectGenres, selectSelectedGenre, selectDisplayedFilms, selectDisplayedFilmsNumber, selectTotalFilmsNumber, selectFilteredFilmsNumber } = filmsSlice.selectors;
-export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber } = filmsSlice.actions;
+export const {
+  selectPromoFilm,
+  selectGenres,
+  selectSelectedGenre,
+  selectDisplayedFilms,
+  selectDisplayedFilmsNumber,
+  selectTotalFilmsNumber,
+  selectFilteredFilmsNumber,
+  selectIsFilmsLoading,
+  selectIsPromoFilmLoading
+} = filmsSlice.selectors;
+export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber, fetchFilmsAction, fetchPromoAction } = filmsSlice.actions;

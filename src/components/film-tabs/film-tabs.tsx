@@ -35,9 +35,9 @@ function FilmTabs({ onTabClick, selectedTab }:Props): JSX.Element {
             {FilmTab.Details}
           </a>
         </li>
-        <li className={getClassName(FilmTab.Reviews)}>
+        <li className={getClassName(FilmTab.Comments)}>
           <a href="#" className="film-nav__link">
-            {FilmTab.Reviews}
+            {FilmTab.Comments}
           </a>
         </li>
       </ul>

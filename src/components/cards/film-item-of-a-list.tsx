@@ -15,7 +15,7 @@ function FilmItemOfAList({ name, previewImage, id, onCardMouseEnter, onCardMouse
   const timerRef = useRef<null | number>(null);
 
   function handleClick() {
-    navigate(`${AppRoute.Film}${id}`);
+    navigate(`${AppRoute.Films}${id}`);
   }
 
   function handleMouseEnter() {
