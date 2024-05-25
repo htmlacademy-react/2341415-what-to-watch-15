@@ -12,7 +12,7 @@ function UserBlock({ avatarUrl }: UserBlockProps): JSX.Element {
   const navigate = useNavigate();
 
   function handleClick() {
-    navigate(PageRoute.MyList);
+    navigate(PageRoute.Favorites);
   }
   return (
     <li className="user-block__item">

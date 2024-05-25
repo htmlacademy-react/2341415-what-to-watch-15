@@ -7,7 +7,7 @@ export enum AuthorizationStatus {
 export enum AppRoute {
   Main = '/',
   Login = '/login',
-  MyList = '/mylist',
+  Favorites = '/favorite',
   Films = '/films/',
   Id = ':id',
   FilmReview = '/review',
@@ -19,13 +19,14 @@ export enum ServerRoute {
   LogIn = '/login',
   Logout = '/logout',
   Similar = '/similar',
-  Comments = '/comments'
+  Comments = '/comments',
+  Favorites = '/favorite'
 }
 
 export enum PageRoute {
   Main = AppRoute.Main,
   Login = AppRoute.Login,
-  MyList = AppRoute.MyList,
+  Favorites = AppRoute.Favorites,
   Film = `${AppRoute.Films}${AppRoute.Id}`,
   FilmComment = `${AppRoute.Films}${AppRoute.Id}${AppRoute.FilmReview}`,
   Player = `${AppRoute.Player}${AppRoute.Id}`

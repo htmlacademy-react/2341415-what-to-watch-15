@@ -10,6 +10,7 @@ import { userApi } from '../services/user-api';
 import errorSlice from './error-slice';
 import similarFilmsSlice from './similar-films-slice';
 import { commentsApi } from '../services/comments-api';
+import { myListApi } from '../services/my-list-api';
 
 export type State = ReturnType<typeof store.getState>;
 
@@ -32,6 +33,7 @@ const store = configureStore({
           filmsApi,
           userApi,
           commentsApi,
+          myListApi
         },
       },
     }),

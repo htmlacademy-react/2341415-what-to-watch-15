@@ -2,11 +2,11 @@ import FilmList from '../../components/cards/film-list';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectMyList } from '../../store/my-list-slice';
+import { selectMyFilms } from '../../store/user-slice';
 
 function MyListPage(): JSX.Element {
 
-  const myList = useAppSelector(selectMyList);
+  const myList = useAppSelector(selectMyFilms);
 
   return (
     <div className="user-page">

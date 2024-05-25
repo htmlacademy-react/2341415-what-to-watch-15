@@ -8,7 +8,7 @@ import LoginPage from '../pages/login-page/login-page';
 import PlayerPage from '../pages/player/player.-page';
 import ConditionalRoute from '../components/conditional-route/conditional-route';
 import { useAppSelector } from '../hooks/app-dispatch';
-import { selectAuthorizationStatus } from '../store/user-slice';
+import { selectAuthorizationStatus, selectIsUserDataLoading } from '../store/user-slice';
 import LoadingPage from '../pages/loading-page/loading-page';
 import { selectIsFilmsLoading } from '../store/films-slice';
 import ErrorMessage from '../components/error-message/error-message';
@@ -25,13 +25,14 @@ function getOnLoadingRoutes() {
 function App(): JSX.Element {
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const isFilmsLoading = useAppSelector(selectIsFilmsLoading);
-  const isLoading = isFilmsLoading;
+  const isUserDataLoading = useAppSelector(selectIsUserDataLoading);
+  const isLoading = isFilmsLoading || isUserDataLoading;
 
   function getInitializedAppRoutes() {
     return (
       <>
         <Route path={PageRoute.Main} element={<MainPage />} />
-        <Route path={PageRoute.MyList} element={
+        <Route path={PageRoute.Favorites} element={
           <ConditionalRoute
             condition={authorizationStatus === AuthorizationStatus.Auth}
             routOnFalse={PageRoute.Login}
