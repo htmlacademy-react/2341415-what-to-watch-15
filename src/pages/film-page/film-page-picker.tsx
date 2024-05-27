@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
 import FilmPage from './film-page';
 import { fetchFilmAction, selectIsFilmLoading, selectIsFilmNotFound, selectSelectedFilm } from '../../store/film-slice';
 import { useEffect } from 'react';
-import LoadingPage from '../loading-page/loading-page';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { fetchSimilarFilmsAction, selectIsSimilarFilmsLoading, selectIsSimilarFilmsNotFound, selectSimilarFilms } from '../../store/similar-films-slice';
 import { fetchCommentsAction } from '../../store/comments-slice';
+import Spinner from '../../components/spinner/spinner';
 
 function FilmPagePicker(): JSX.Element | null{
   const { id } = useParams();
@@ -37,7 +37,7 @@ function FilmPagePicker(): JSX.Element | null{
   );
 
   if (isSelectedFilmLoading || isSimilarFilmsLoading) {
-    return <LoadingPage />;
+    return <Spinner />;
   }
 
   if (id === undefined || isSelectedFilmNotFound) {
@@ -45,7 +45,7 @@ function FilmPagePicker(): JSX.Element | null{
   }
 
   if (selectedFilm === null) {
-    return <LoadingPage />;
+    return <Spinner />;
   }
 
   return <FilmPage selectedFilm={selectedFilm} similarFilms={similarFilms} />;
