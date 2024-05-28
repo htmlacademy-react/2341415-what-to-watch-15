@@ -19,7 +19,6 @@ const store = configureStore({
     films: filmsSlice.reducer,
     promoFilm: filmsSlice.reducer,
     film: filmSlice.reducer,
-    myList: myListSlice.reducer,
     player: playerSlice.reducer,
     comments: commentsSlice.reducer,
     user: userSlice.reducer,
