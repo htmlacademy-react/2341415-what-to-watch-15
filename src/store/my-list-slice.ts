@@ -24,6 +24,4 @@ const myListSlice = createSliceWithThunks({
 });
 
 export default myListSlice;
-// export const {
-// } = filmsSlice.actions;
 export const { selectMyList } = myListSlice.selectors;

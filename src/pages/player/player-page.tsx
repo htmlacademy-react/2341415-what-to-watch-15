@@ -1,4 +1,5 @@
 import { useRef, useState, MouseEvent } from 'react';
+import { isNil } from 'lodash';
 import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectVideoLink } from '../../store/player-slice';
 import { getRunTime } from '../../utils';
@@ -6,20 +7,25 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const';
 
 function PlayerPage(): JSX.Element {
-
   const videoLink = useAppSelector(selectVideoLink);
   const vidRef = useRef<HTMLVideoElement>(null);
-  const runTimeSeconds = vidRef.current?.duration ?? 0;
-  const [isPaused, setIsPaused] = useState(!!vidRef.current?.paused);
+  const runTimeSeconds = vidRef.current?.duration;
+  const [isPaused, setIsPaused] = useState(true);
   const [currentTimePercentage, setCurrentTimePercentage] = useState(0);
-  const [leftTimeValue, setLeftTimeValue] = useState(vidRef.current.duration);
+  const [leftTimeValue, setLeftTimeValue] = useState(vidRef.current?.duration ?? 0);
   const navigate = useNavigate();
 
   setTimeout(() => {
-    if (vidRef.current) {
+    if (
+      !isNil(vidRef.current)
+      && !isNil(runTimeSeconds)
+    ) {
       const leftTime = vidRef.current?.currentTime;
       setCurrentTimePercentage((leftTime * 100) / (runTimeSeconds));
       setLeftTimeValue(vidRef.current.duration - vidRef.current.currentTime);
+      if(vidRef.current?.paused) {
+        setIsPaused(() => true);
+      }
     }
   }, 100);
 
@@ -48,7 +54,7 @@ function PlayerPage(): JSX.Element {
   };
 
   function handleProgressClick(evt: MouseEvent<HTMLProgressElement>) {
-    if (evt.target instanceof HTMLProgressElement) {
+    if (evt.target instanceof HTMLProgressElement && !isNil(runTimeSeconds)) {
       const progressInPercent = (evt.clientX - evt.target.getBoundingClientRect().x) / evt.target.offsetWidth * 100;
       vidRef.current!.currentTime = runTimeSeconds * progressInPercent / 100;
       setCurrentTimePercentage(progressInPercent);
@@ -57,7 +63,7 @@ function PlayerPage(): JSX.Element {
 
   return (
     <div className="player">
-      <video ref={vidRef} className="player__video" poster="img/player-poster.jpg" muted loop autoPlay>
+      <video ref={vidRef} className="player__video" poster="img/player-poster.jpg" muted>
         <source src={videoLink} type="video/mp4" />
       </video>
       <button onClick={handleExit} type="button" className="player__exit">

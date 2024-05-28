@@ -4,6 +4,8 @@ import { ALL_GENRES, DISPLAYED_FILMS_NUMBER_STEP } from '../const';
 import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { FilmsApi } from '../services/films-api';
+import { setErrorMessage } from './error-slice';
+import { getMessage } from '../services/handle-error';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -71,8 +73,8 @@ const filmsSlice = createSliceWithThunks({
       state.displayedFilmsNumber = DISPLAYED_FILMS_NUMBER_STEP;
     }),
     fetchFilmsAction: create.asyncThunk<FilmListItem[], undefined, { extra: { filmsApi: FilmsApi }}>(
-      async (_arg, { extra: { filmsApi } }) => filmsApi.getList().catch((err) => {
-      // showErrorMessage('loading error', dispatch);
+      async (_arg, { extra: { filmsApi }, dispatch }) => filmsApi.getList().catch((err) => {
+        dispatch(setErrorMessage(getMessage(err)));
         throw err;
       }),
       {

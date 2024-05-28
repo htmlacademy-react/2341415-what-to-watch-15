@@ -32,7 +32,7 @@ function App(): JSX.Element {
     return (
       <>
         <Route path={PageRoute.Main} element={<MainPage />} />
-        <Route path={PageRoute.Favorites} element={
+        <Route path={PageRoute.MyList} element={
           <ConditionalRoute
             condition={authorizationStatus === AuthorizationStatus.Auth}
             routOnFalse={PageRoute.Login}
@@ -60,7 +60,6 @@ function App(): JSX.Element {
 
   return (
     <>
-      {/* <Spinner /> */}
       <ErrorMessage />
       <BrowserRouter>
         <Routes>

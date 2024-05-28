@@ -2,6 +2,8 @@ import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Film } from '../types';
 import { FilmsApi } from '../services/films-api';
 import { isNotFoundError } from '../utils';
+import { setErrorMessage } from './error-slice';
+import { getMessage } from '../services/handle-error';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -33,7 +35,8 @@ const filmSlice = createSliceWithThunks({
       state.notFound = false;
     }),
     fetchFilmAction: create.asyncThunk<Film, string, { extra: { filmsApi: FilmsApi }}>(
-      (id, { extra: { filmsApi } }) => filmsApi.getFilm(id).catch((err) => {
+      (id, { extra: { filmsApi }, dispatch }) => filmsApi.getFilm(id).catch((err) => {
+        dispatch(setErrorMessage(getMessage(err)));
         throw err;
       }),
       {

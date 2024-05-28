@@ -67,7 +67,8 @@ const userSlice = createSliceWithThunks({
       }
     ),
     logoutAction: create.asyncThunk<void, undefined , { extra: { userApi: UserApi }}>(
-      (_arg, { extra: { userApi } }) => userApi.logout().catch((err) => {
+      (_arg, { extra: { userApi }, dispatch }) => userApi.logout().catch((err) => {
+        dispatch(setErrorMessage(getMessage(err)));
         throw err;
       }),
       {
