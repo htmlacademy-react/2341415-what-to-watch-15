@@ -9,23 +9,29 @@ import { AppRoute } from '../../const';
 function PlayerPage(): JSX.Element {
   const videoLink = useAppSelector(selectVideoLink);
   const vidRef = useRef<HTMLVideoElement>(null);
-  const runTimeSeconds = vidRef.current?.duration;
   const [isPaused, setIsPaused] = useState(true);
+  const [runTimeSeconds, setRunTime] = useState(0);
   const [currentTimePercentage, setCurrentTimePercentage] = useState(0);
-  const [leftTimeValue, setLeftTimeValue] = useState(vidRef.current?.duration ?? 0);
+  const [leftTimeValue, setLeftTimeValue] = useState(0);
   const navigate = useNavigate();
 
-  setTimeout(() => {
+  setInterval(() => {
+    const duration = vidRef.current?.duration ?? 0;
+    const currentTime = vidRef.current?.currentTime ?? 0;
+
     if (
-      !isNil(vidRef.current)
-      && !isNil(runTimeSeconds)
+      Number.isFinite(duration)
+      && duration > 0
     ) {
-      const leftTime = vidRef.current?.currentTime;
-      setCurrentTimePercentage((leftTime * 100) / (runTimeSeconds));
-      setLeftTimeValue(vidRef.current.duration - vidRef.current.currentTime);
+      setRunTime(duration);
+      setCurrentTimePercentage((currentTime * 100) / (duration));
+      setLeftTimeValue(duration - currentTime);
       if(vidRef.current?.paused) {
         setIsPaused(() => true);
       }
+    } else {
+
+      setLeftTimeValue(0);
     }
   }, 100);
 
@@ -77,7 +83,7 @@ function PlayerPage(): JSX.Element {
               Toggler
             </div>
           </div>
-          <div className="player__time-value">{getRunTime(leftTimeValue)}</div>
+          <div className="player__time-value">{`-${getRunTime(leftTimeValue)}`}</div>
         </div>
         <div className="player__controls-row">
           <button onClick={handlePlayVideo} type="button" className="player__play">

@@ -59,7 +59,7 @@ const commentsSlice = createSliceWithThunks({
     {
       fulfilled: (state, action) => {
         state.isCommentAddingInProgress = false;
-        state.comments = [action.payload,...state.comments];
+        state.comments = [action.payload, ...state.comments].sort((a,b) => b.rating - a.rating);
         state.isCommentWasAdded = true;
       },
       pending: (state) => {

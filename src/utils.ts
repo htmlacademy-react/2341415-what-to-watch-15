@@ -22,7 +22,7 @@ export function getRunTime(runTime: number): string {
   const { hours, seconds, minutes } = intervalToDuration({ start: 0, end: runTime * 1000 });
   const timing = [hours, minutes ?? 0, seconds ?? 0].filter((it) => !isNil(it)) as number[];
 
-  return `-${timing.map(toDigitStr).join(':')}`;
+  return `${timing.map(toDigitStr).join(':')}`;
 }
 
 export function isNotFoundError(err: SerializedError): boolean {
