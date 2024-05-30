@@ -10,7 +10,7 @@ import FilmCardButtons from '../../components/film-card-buttons/film-card-button
 import CommentsList from '../../components/comments/comment-list';
 import { useAppSelector } from '../../hooks/app-dispatch';
 import { selectComments } from '../../store/comments-slice';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import FilmList from '../../components/cards/film-list';
 import { selectAuthorizationStatus } from '../../store/user-slice';
 
@@ -19,9 +19,14 @@ type Props = {
   similarFilms: FilmListItem[];
 };
 
+const tabs: string[] = Object.values(FilmTab);
+
 function FilmPage({ selectedFilm, similarFilms }: Props): JSX.Element {
+  const [searchParams] = useSearchParams();
+  const tabStr = searchParams.get('tab');
+  const queryTab: FilmTab = tabStr && tabs.includes(tabStr) ? tabStr as FilmTab : FilmTab.OverView;
   const { name, genre, released, posterImage, backgroundImage, id } = selectedFilm;
-  const [selectedTab, setSelectedTab] = useState<FilmTab>(FilmTab.OverView);
+  const [selectedTab, setSelectedTab] = useState<FilmTab>(queryTab);
   const reviews = useAppSelector(selectComments);
   const authStatus = useAppSelector(selectAuthorizationStatus);
 
@@ -83,9 +88,7 @@ function FilmPage({ selectedFilm, similarFilms }: Props): JSX.Element {
       <div className="page-content">
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
-          <div className="catalog__films-list">
-            <FilmList films={similarFilms} />
-          </div>
+          <FilmList films={similarFilms} />
         </section>
         <Footer />
       </div>

@@ -4,8 +4,7 @@ import { ALL_GENRES, DISPLAYED_FILMS_NUMBER_STEP } from '../const';
 import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
 import { FilmsApi } from '../services/films-api';
-import { setErrorMessage } from './error-slice';
-import { getMessage } from '../services/handle-error';
+import { showErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -48,10 +47,8 @@ const filmsSlice = createSliceWithThunks({
     ),
     selectFilteredFilmsNumber: (state) => state.filteredFilms.length,
     selectPromoFilm: (state) => state.promoFilm,
-    selectTotalFilmsNumber: (state) => state.films.length,
     selectDisplayedFilmsNumber: (state) => state.displayedFilmsNumber,
     selectIsFilmsLoading: (state) => state.isFilmsLoading,
-    selectIsPromoFilmLoading: (state) => state.isPromoFilmLoading,
     selectGenres: createSelector(
       [
         (state: FilmsState) => state.films,
@@ -74,7 +71,7 @@ const filmsSlice = createSliceWithThunks({
     }),
     fetchFilmsAction: create.asyncThunk<FilmListItem[], undefined, { extra: { filmsApi: FilmsApi }}>(
       async (_arg, { extra: { filmsApi }, dispatch }) => filmsApi.getList().catch((err) => {
-        dispatch(setErrorMessage(getMessage(err)));
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -113,15 +110,21 @@ const filmsSlice = createSliceWithThunks({
 });
 
 export default filmsSlice;
+
 export const {
   selectPromoFilm,
   selectGenres,
   selectSelectedGenre,
   selectDisplayedFilms,
   selectDisplayedFilmsNumber,
-  selectTotalFilmsNumber,
   selectFilteredFilmsNumber,
   selectIsFilmsLoading,
-  selectIsPromoFilmLoading
 } = filmsSlice.selectors;
-export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber, fetchFilmsAction, fetchPromoAction } = filmsSlice.actions;
+
+export const {
+  setSelectedGenre,
+  increaseDisplayedFilmsNumber,
+  resetDisplayedFilmsNumber,
+  fetchFilmsAction,
+  fetchPromoAction
+} = filmsSlice.actions;

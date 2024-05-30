@@ -1,8 +1,7 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { FilmListItem } from '../types';
 import { FilmsApi } from '../services/films-api';
-import { setErrorMessage } from './error-slice';
-import { getMessage } from '../services/handle-error';
+import { showErrorMessage } from './error-slice';
 import { isNotFoundError } from '../utils';
 
 const createSliceWithThunks = buildCreateSlice({
@@ -30,13 +29,9 @@ const similarFilmsSlice = createSliceWithThunks({
     selectIsSimilarFilmsNotFound: (state) => state.notFoundSimilar,
   },
   reducers: (create) => ({
-    resetSimilarFilms: create.reducer((state) => {
-      state.similarFilms = [];
-      state.notFoundSimilar = false;
-    }),
     fetchSimilarFilmsAction: create.asyncThunk<FilmListItem[], string, { extra: { filmsApi: FilmsApi }}>(
       async (id, { extra: { filmsApi }, dispatch }) => filmsApi.getSimilar(id).catch((err) => {
-        dispatch(setErrorMessage(getMessage(err)));
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -61,5 +56,11 @@ const similarFilmsSlice = createSliceWithThunks({
 });
 
 export default similarFilmsSlice;
-export const { selectSimilarFilms, selectIsSimilarFilmsLoading, selectIsSimilarFilmsNotFound } = similarFilmsSlice.selectors;
-export const { fetchSimilarFilmsAction, resetSimilarFilms } = similarFilmsSlice.actions;
+
+export const {
+  selectSimilarFilms,
+  selectIsSimilarFilmsLoading,
+  selectIsSimilarFilmsNotFound
+} = similarFilmsSlice.selectors;
+
+export const { fetchSimilarFilmsAction } = similarFilmsSlice.actions;

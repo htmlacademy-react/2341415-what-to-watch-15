@@ -3,8 +3,7 @@ import { AuthorizationStatus } from '../const';
 import { AuthData, FilmListItem, User } from '../types';
 import { getToken } from '../services/token';
 import { UserApi } from '../services/user-api';
-import { getMessage } from '../services/handle-error';
-import { setErrorMessage } from './error-slice';
+import { showErrorMessage } from './error-slice';
 import { MyListApi } from '../services/my-list-api';
 
 const createSliceWithThunks = buildCreateSlice({
@@ -50,7 +49,7 @@ const userSlice = createSliceWithThunks({
   reducers: (create) => ({
     loginAction: create.asyncThunk<User, AuthData , { extra: { userApi: UserApi }}>(
       (authData, { extra: { userApi }, dispatch }) => userApi.login(authData).catch((err) => {
-        dispatch(setErrorMessage(getMessage(err)));
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -68,7 +67,7 @@ const userSlice = createSliceWithThunks({
     ),
     logoutAction: create.asyncThunk<void, undefined , { extra: { userApi: UserApi }}>(
       (_arg, { extra: { userApi }, dispatch }) => userApi.logout().catch((err) => {
-        dispatch(setErrorMessage(getMessage(err)));
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -87,11 +86,11 @@ const userSlice = createSliceWithThunks({
         }
 
         const user = await userApi.getAuthorizedUser().catch((err) => {
-          dispatch(setErrorMessage(getMessage(err)));
+          showErrorMessage(err, dispatch);
           throw err;
         });
         const myFilms = await myListApi.getList().catch((err) => {
-          dispatch(setErrorMessage(getMessage(err)));
+          showErrorMessage(err, dispatch);
           throw err;
         });
 
@@ -116,7 +115,7 @@ const userSlice = createSliceWithThunks({
     ),
     fetchIsFavoritesAction: create.asyncThunk<FilmListItem & { isFavorite: boolean }, { id: string; isFavorite: boolean }, { extra: { myListApi: MyListApi } }>(
       async ({ id, isFavorite }, { extra: { myListApi }, dispatch }) => myListApi.changeIsFavorite(id, isFavorite).catch((err) => {
-        dispatch(setErrorMessage(getMessage(err)));
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -143,5 +142,17 @@ const userSlice = createSliceWithThunks({
 });
 
 export default userSlice;
-export const { selectAuthorizationStatus, selectUser, selectMyFilms, selectIsUserDataLoading, selectAddingToFavoritesOfferIds } = userSlice.selectors;
-export const { loginAction, logoutAction, checkAuthAction, fetchIsFavoritesAction } = userSlice.actions;
+
+export const {
+  selectAuthorizationStatus,
+  selectUser, selectMyFilms,
+  selectIsUserDataLoading,
+  selectAddingToFavoritesOfferIds
+} = userSlice.selectors;
+
+export const {
+  loginAction,
+  logoutAction,
+  checkAuthAction,
+  fetchIsFavoritesAction
+} = userSlice.actions;

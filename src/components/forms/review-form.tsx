@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
 import { addCommentAction, selectIsCommentAddingInProgress } from '../../store/comments-slice';
 import { useNavigate } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, FilmTab } from '../../const';
 import './review-form.css';
 
 type Props = {
@@ -38,7 +38,7 @@ function ReviewForm({ id }: Props): JSX.Element {
       comment: { comment: review , rating, id },
       onSuccess: () => {
         clearCommentForm();
-        navigate(`${AppRoute.Films}${id}`);
+        navigate(`${AppRoute.Films}${id}?tab=${FilmTab.Comments}`);
       }
     }));
   }

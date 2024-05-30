@@ -7,6 +7,7 @@ import NotFoundPage from '../not-found-page/not-found-page';
 import { fetchSimilarFilmsAction, selectIsSimilarFilmsLoading, selectIsSimilarFilmsNotFound, selectSimilarFilms } from '../../store/similar-films-slice';
 import { fetchCommentsAction } from '../../store/comments-slice';
 import Spinner from '../../components/spinner/spinner';
+import { selectErrorMessage } from '../../store/error-slice';
 
 function FilmPagePicker(): JSX.Element | null{
   const { id } = useParams();
@@ -18,6 +19,7 @@ function FilmPagePicker(): JSX.Element | null{
   const isSimilarFilmsLoading = useAppSelector(selectIsSimilarFilmsLoading);
   const isSelectedFilmNotFound = useAppSelector(selectIsFilmNotFound);
   const isSimilarNotFound = useAppSelector(selectIsSimilarFilmsNotFound);
+  const error = useAppSelector(selectErrorMessage);
 
   useEffect(
     () => {
@@ -26,6 +28,7 @@ function FilmPagePicker(): JSX.Element | null{
         && (selectedFilm === null || selectedFilm.id !== id)
         && isSelectedFilmLoading === false
         && isSelectedFilmNotFound !== true
+        && error === null
       ) {
         dispatch(fetchFilmAction(id));
         dispatch(fetchSimilarFilmsAction(id));
@@ -33,7 +36,7 @@ function FilmPagePicker(): JSX.Element | null{
       }
 
     },
-    [selectedFilm, id, isSelectedFilmLoading, isSelectedFilmNotFound, isSimilarFilmsLoading, isSimilarNotFound, dispatch]
+    [selectedFilm, id, isSelectedFilmLoading, isSelectedFilmNotFound, isSimilarFilmsLoading, isSimilarNotFound, dispatch, error]
   );
 
   if (isSelectedFilmLoading || isSimilarFilmsLoading) {
@@ -44,7 +47,7 @@ function FilmPagePicker(): JSX.Element | null{
     return <NotFoundPage />;
   }
 
-  if (selectedFilm === null) {
+  if (selectedFilm === null || error !== null) {
     return <Spinner />;
   }
 
