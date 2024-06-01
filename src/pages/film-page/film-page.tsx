@@ -7,11 +7,11 @@ import { AppRoute, AuthorizationStatus, FilmTab } from '../../const';
 import FilmOverview from '../../components/film-tabs/film-overview';
 import FilmDetails from '../../components/film-tabs/film-details';
 import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
-import CommentsList from '../../components/comments/comment-list';
-import { useAppSelector } from '../../hooks/app-dispatch';
+import CommentsList from '../../components/comments-list/comment-list';
+import { useAppSelector } from '../../hooks/hooks';
 import { selectComments } from '../../store/comments-slice';
-import { Link } from 'react-router-dom';
-import FilmList from '../../components/cards/film-list';
+import { Link, useSearchParams } from 'react-router-dom';
+import FilmList from '../../components/film-list/film-list';
 import { selectAuthorizationStatus } from '../../store/user-slice';
 
 type Props = {
@@ -19,9 +19,14 @@ type Props = {
   similarFilms: FilmListItem[];
 };
 
+const tabs: string[] = Object.values(FilmTab);
+
 function FilmPage({ selectedFilm, similarFilms }: Props): JSX.Element {
+  const [searchParams] = useSearchParams();
+  const tabStr = searchParams.get('tab');
+  const queryTab: FilmTab = tabStr && tabs.includes(tabStr) ? tabStr as FilmTab : FilmTab.OverView;
   const { name, genre, released, posterImage, backgroundImage, id } = selectedFilm;
-  const [selectedTab, setSelectedTab] = useState<FilmTab>(FilmTab.OverView);
+  const [selectedTab, setSelectedTab] = useState<FilmTab>(queryTab);
   const reviews = useAppSelector(selectComments);
   const authStatus = useAppSelector(selectAuthorizationStatus);
 
@@ -55,7 +60,7 @@ function FilmPage({ selectedFilm, similarFilms }: Props): JSX.Element {
                 <span className="film-card__year">{released}</span>
               </p>
               <div className="film-card__buttons">
-                <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} runTime={selectedFilm.runTime}/>
+                <FilmCardButtons id={id} videoLink={selectedFilm.videoLink} />
                 {authStatus === AuthorizationStatus.Auth
                   ? <Link to={`${AppRoute.Films}${selectedFilm.id}${AppRoute.FilmReview}`} className="btn film-card__button">Add review</Link>
                   : null}
@@ -83,9 +88,7 @@ function FilmPage({ selectedFilm, similarFilms }: Props): JSX.Element {
       <div className="page-content">
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
-          <div className="catalog__films-list">
-            <FilmList films={similarFilms} />
-          </div>
+          <FilmList films={similarFilms} />
         </section>
         <Footer />
       </div>

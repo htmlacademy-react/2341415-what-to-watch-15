@@ -1,10 +1,10 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { AuthorizationStatus } from '../const';
-import { AuthData, User } from '../types';
-import { getToken } from '../services/token';
-import { UserApi } from '../services/user-api';
-import { getMessage } from '../services/handle-error';
-import { setErrorMessage } from './error-slice';
+import { AuthData, FilmListItem, User } from '../types';
+import { getToken } from '../api/token';
+import { UserApi } from '../api/user-api';
+import { showErrorMessage } from './error-slice';
+import { MyListApi } from '../api/my-list-api';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -13,20 +13,29 @@ const createSliceWithThunks = buildCreateSlice({
 type UserState = {
   user: User | null;
   token: string | null;
-  isUserLoading: boolean;
+  isUserDataLoading: boolean;
+  myFilms: FilmListItem[];
+  addingToFavoritesOfferIds: string[];
 }
 
 const initialState: UserState = {
   user: null,
   token: getToken(),
-  isUserLoading: false,
+  isUserDataLoading: false,
+  myFilms: [],
+  addingToFavoritesOfferIds: [],
 };
 
+export const USER_SLICE_NAME = 'user';
+
 const userSlice = createSliceWithThunks({
-  name: 'user',
+  name: USER_SLICE_NAME,
   initialState,
   selectors: {
     selectUser: (state) => state.user,
+    selectMyFilms: (state) => state.myFilms,
+    selectIsUserDataLoading: (state) => state.isUserDataLoading,
+    selectAddingToFavoritesOfferIds: (state) => state.addingToFavoritesOfferIds,
     selectAuthorizationStatus: (state) => {
       if (state.user) {
         return AuthorizationStatus.Auth;
@@ -42,18 +51,25 @@ const userSlice = createSliceWithThunks({
   reducers: (create) => ({
     loginAction: create.asyncThunk<User, AuthData , { extra: { userApi: UserApi }}>(
       (authData, { extra: { userApi }, dispatch }) => userApi.login(authData).catch((err) => {
-        dispatch(setErrorMessage(getMessage(err)));
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
+        pending: (state) => {
+          state.isUserDataLoading = true;
+        },
         fulfilled: (state, action) => {
           state.user = action.payload;
-          state.isUserLoading = true;
+          state.isUserDataLoading = false;
+        },
+        rejected: (state) => {
+          state.isUserDataLoading = false;
         },
       }
     ),
     logoutAction: create.asyncThunk<void, undefined , { extra: { userApi: UserApi }}>(
-      (_arg, { extra: { userApi } }) => userApi.logout().catch((err) => {
+      (_arg, { extra: { userApi }, dispatch }) => userApi.logout().catch((err) => {
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -63,28 +79,82 @@ const userSlice = createSliceWithThunks({
         },
       }
     ),
-    checkAuthAction: create.asyncThunk<User | null, undefined, { extra: { userApi: UserApi } }>(
-      async (_arg, { extra: { userApi }, getState }) => {
+    checkAuthAction: create.asyncThunk<{ user: User | null; myFilms: FilmListItem[] }, undefined, { extra: { userApi: UserApi; myListApi: MyListApi } }>(
+      async (_arg, { extra: { userApi, myListApi }, getState, dispatch }) => {
         const state = getState() as { user: UserState };
 
         if(!state.user.token) {
-          return null;
+          return { user: null, myFilms: [] };
         }
 
-        return userApi.getAuthorizedUser().then((user) => user).catch(() => null);
+        const user = await userApi.getAuthorizedUser().catch((err) => {
+          showErrorMessage(err, dispatch);
+          throw err;
+        });
+        const myFilms = await myListApi.getList().catch((err) => {
+          showErrorMessage(err, dispatch);
+          throw err;
+        });
+
+        return { user, myFilms };
       },
       {
         fulfilled: (state, action) => {
-          state.user = action.payload;
+          const { payload: { user, myFilms } } = action;
+          state.user = user;
+          state.myFilms = myFilms;
+          state.isUserDataLoading = false;
+
         },
         pending: (state) => {
-          state.isUserLoading = true;
+          state.isUserDataLoading = true;
+        },
+        rejected: (state) => {
+          state.isUserDataLoading = false;
+          state.token = null;
         },
       }
     ),
+    fetchIsFavoritesAction: create.asyncThunk<FilmListItem & { isFavorite: boolean }, { id: string; isFavorite: boolean }, { extra: { myListApi: MyListApi } }>(
+      async ({ id, isFavorite }, { extra: { myListApi }, dispatch }) => myListApi.changeIsFavorite(id, isFavorite).catch((err) => {
+        showErrorMessage(err, dispatch);
+        throw err;
+      }),
+      {
+        pending: (state, action) => {
+          state.addingToFavoritesOfferIds = [...state.addingToFavoritesOfferIds, action.meta.arg.id];
+        },
+        fulfilled: (state, action) => {
+          const updatedFilm = action.payload;
+
+          if (updatedFilm.isFavorite){
+            state.myFilms = [...state.myFilms, updatedFilm];
+          } else {
+            state.myFilms = state.myFilms.filter((film) => film.id !== updatedFilm.id);
+          }
+
+          state.addingToFavoritesOfferIds = state.addingToFavoritesOfferIds.filter((id) => id !== action.meta.arg.id);
+        },
+        rejected: (state, action) => {
+          state.addingToFavoritesOfferIds = state.addingToFavoritesOfferIds.filter((id) => id !== action.meta.arg.id);
+        },
+      }
+    )
   }),
 });
 
 export default userSlice;
-export const { selectAuthorizationStatus, selectUser } = userSlice.selectors;
-export const { loginAction, logoutAction, checkAuthAction } = userSlice.actions;
+
+export const {
+  selectAuthorizationStatus,
+  selectUser, selectMyFilms,
+  selectIsUserDataLoading,
+  selectAddingToFavoritesOfferIds
+} = userSlice.selectors;
+
+export const {
+  loginAction,
+  logoutAction,
+  checkAuthAction,
+  fetchIsFavoritesAction
+} = userSlice.actions;

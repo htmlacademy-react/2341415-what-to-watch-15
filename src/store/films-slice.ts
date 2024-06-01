@@ -1,9 +1,10 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
-import { Film, FilmListItem } from '../types';
+import { FilmListItem, PromoFilm } from '../types';
 import { ALL_GENRES, DISPLAYED_FILMS_NUMBER_STEP } from '../const';
 import { uniq } from 'lodash';
 import { createSelector } from 'reselect';
-import { FilmsApi } from '../services/films-api';
+import { FilmsApi } from '../api/films-api';
+import { showErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -11,10 +12,9 @@ const createSliceWithThunks = buildCreateSlice({
 
 type FilmsState = {
   films: FilmListItem[];
-  promoFilm: Film | null;
+  promoFilm: PromoFilm | null;
   selectedGenre: string;
   displayedFilmsNumber: number;
-  filteredFilms: FilmListItem[];
   isFilmsLoading: boolean;
   isPromoFilmLoading: boolean;
 }
@@ -24,7 +24,6 @@ const initialState: FilmsState = {
   promoFilm: null,
   selectedGenre: ALL_GENRES,
   displayedFilmsNumber: DISPLAYED_FILMS_NUMBER_STEP,
-  filteredFilms: [],
   isFilmsLoading: false,
   isPromoFilmLoading: false,
 };
@@ -33,23 +32,30 @@ function getFilteredFilmsByGenre(films: FilmListItem[], genre: string): FilmList
   return genre === ALL_GENRES ? films : films.filter((film) => genre === film.genre);
 }
 
+export const FILMS_SLICE_NAME = 'films';
+
 const filmsSlice = createSliceWithThunks({
-  name: 'films',
+  name: FILMS_SLICE_NAME,
   initialState,
   selectors: {
     selectDisplayedFilms: createSelector(
       [
-        (state: FilmsState) => state.filteredFilms,
+        (state: FilmsState) => state.films,
+        (state: FilmsState) => state.selectedGenre,
         (state: FilmsState) => state.displayedFilmsNumber,
       ],
-      (filteredFilms, displayedFilmsNumber) => filteredFilms.slice(0, displayedFilmsNumber)
+      (films, selectedGenre, displayedFilmsNumber) => getFilteredFilmsByGenre(films, selectedGenre).slice(0, displayedFilmsNumber)
     ),
-    selectFilteredFilmsNumber: (state) => state.filteredFilms.length,
+    selectFilteredFilmsNumber: createSelector(
+      [
+        (state: FilmsState) => state.films,
+        (state: FilmsState) => state.selectedGenre,
+      ],
+      (films, selectedGenre) => getFilteredFilmsByGenre(films, selectedGenre).length
+    ),
     selectPromoFilm: (state) => state.promoFilm,
-    selectTotalFilmsNumber: (state) => state.films.length,
     selectDisplayedFilmsNumber: (state) => state.displayedFilmsNumber,
     selectIsFilmsLoading: (state) => state.isFilmsLoading,
-    selectIsPromoFilmLoading: (state) => state.isPromoFilmLoading,
     selectGenres: createSelector(
       [
         (state: FilmsState) => state.films,
@@ -62,7 +68,6 @@ const filmsSlice = createSliceWithThunks({
     setSelectedGenre: create.reducer<string>((state, action) => {
       const { payload: selectedGenre } = action;
       state.selectedGenre = selectedGenre;
-      state.filteredFilms = getFilteredFilmsByGenre(state.films, selectedGenre);
     }),
     increaseDisplayedFilmsNumber: create.reducer((state) => {
       state.displayedFilmsNumber = Math.min(state.films.length, state.displayedFilmsNumber + DISPLAYED_FILMS_NUMBER_STEP);
@@ -71,15 +76,14 @@ const filmsSlice = createSliceWithThunks({
       state.displayedFilmsNumber = DISPLAYED_FILMS_NUMBER_STEP;
     }),
     fetchFilmsAction: create.asyncThunk<FilmListItem[], undefined, { extra: { filmsApi: FilmsApi }}>(
-      async (_arg, { extra: { filmsApi } }) => filmsApi.getList().catch((err) => {
-      // showErrorMessage('loading error', dispatch);
+      async (_arg, { extra: { filmsApi }, dispatch }) => filmsApi.getList().catch((err) => {
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
         fulfilled: (state, action) => {
           const { payload: films } = action;
-          state.films = action.payload;
-          state.filteredFilms = getFilteredFilmsByGenre(films, state.selectedGenre);
+          state.films = films;
           state.isFilmsLoading = false;
         },
         pending: (state) => {
@@ -90,7 +94,7 @@ const filmsSlice = createSliceWithThunks({
         }
       }
     ),
-    fetchPromoAction: create.asyncThunk<Film, undefined, { extra: { filmsApi: FilmsApi }}>(
+    fetchPromoAction: create.asyncThunk<PromoFilm, undefined, { extra: { filmsApi: FilmsApi }}>(
       (_arg, { extra: { filmsApi } }) => filmsApi.getPromo().catch((err) => {
         throw err;
       }),
@@ -111,15 +115,21 @@ const filmsSlice = createSliceWithThunks({
 });
 
 export default filmsSlice;
+
 export const {
   selectPromoFilm,
   selectGenres,
   selectSelectedGenre,
   selectDisplayedFilms,
   selectDisplayedFilmsNumber,
-  selectTotalFilmsNumber,
   selectFilteredFilmsNumber,
   selectIsFilmsLoading,
-  selectIsPromoFilmLoading
 } = filmsSlice.selectors;
-export const { setSelectedGenre, increaseDisplayedFilmsNumber, resetDisplayedFilmsNumber, fetchFilmsAction, fetchPromoAction } = filmsSlice.actions;
+
+export const {
+  setSelectedGenre,
+  increaseDisplayedFilmsNumber,
+  resetDisplayedFilmsNumber,
+  fetchFilmsAction,
+  fetchPromoAction
+} = filmsSlice.actions;

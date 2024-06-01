@@ -1,4 +1,4 @@
-import { useAppDispatch } from '../../hooks/app-dispatch';
+import { useAppDispatch } from '../../hooks/hooks';
 import { increaseDisplayedFilmsNumber } from '../../store/films-slice';
 
 function ShowMoreButton(): JSX.Element {

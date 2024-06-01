@@ -6,7 +6,7 @@ type Props = {
 }
 
 function FilmList({ films }: Props): JSX.Element {
-  const [selectedFilmId, setActiveFilmId] = useState<undefined | string>(undefined);
+  const [, setActiveFilmId] = useState<undefined | string>(undefined);
   const handleFilmMouseLeave = useCallback(() => setActiveFilmId(undefined),[]);
 
   return (

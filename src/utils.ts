@@ -1,4 +1,7 @@
 import { SerializedError } from '@reduxjs/toolkit';
+import { intervalToDuration } from 'date-fns';
+import { isNil } from 'lodash';
+import { MILLISECONDS_IN_SECOND } from './const';
 
 export function getRatingName(rating: number): string {
   switch (true) {
@@ -10,10 +13,19 @@ export function getRatingName(rating: number): string {
   }
 }
 
+const requiredNumberLength = 2;
+
+function toDigitStr(n: number) {
+  const numberStr = n.toString();
+
+  return numberStr.length < requiredNumberLength ? `0${numberStr}` : numberStr;
+}
+
 export function getRunTime(runTime: number): string {
-  const hours = Math.floor(runTime / 60);
-  const minutes = runTime % 60;
-  return `${hours}h ${minutes}m`;
+  const { hours, seconds, minutes } = intervalToDuration({ start: 0, end: runTime * MILLISECONDS_IN_SECOND });
+  const timing = [hours, minutes ?? 0, seconds ?? 0].filter((it) => !isNil(it)) as number[];
+
+  return `${timing.map(toDigitStr).join(':')}`;
 }
 
 export function isNotFoundError(err: SerializedError): boolean {

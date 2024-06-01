@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import Footer from '../../components/footer/footer';
 import Logo from '../../components/logo/logo';
 import { loginAction, selectUser } from '../../store/user-slice';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useNavigate } from 'react-router-dom';
 import { PageRoute } from '../../const';
 

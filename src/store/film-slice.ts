@@ -1,7 +1,8 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Film } from '../types';
-import { FilmsApi } from '../services/films-api';
+import { FilmsApi } from '../api/films-api';
 import { isNotFoundError } from '../utils';
+import { showErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -19,8 +20,11 @@ const initialState: FilmState = {
   notFound: false,
 };
 
+
+export const FILM_SLICE_NAME = 'film';
+
 const filmSlice = createSliceWithThunks({
-  name: 'film',
+  name: FILM_SLICE_NAME,
   initialState,
   selectors: {
     selectSelectedFilm: (state) => state.selectedFilm,
@@ -28,12 +32,9 @@ const filmSlice = createSliceWithThunks({
     selectIsFilmNotFound: (state) => state.notFound,
   },
   reducers: (create) => ({
-    resetSelectedFilm: create.reducer((state) => {
-      state.selectedFilm = null;
-      state.notFound = false;
-    }),
     fetchFilmAction: create.asyncThunk<Film, string, { extra: { filmsApi: FilmsApi }}>(
-      (id, { extra: { filmsApi } }) => filmsApi.getFilm(id).catch((err) => {
+      (id, { extra: { filmsApi }, dispatch }) => filmsApi.getFilm(id).catch((err) => {
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -58,5 +59,11 @@ const filmSlice = createSliceWithThunks({
 });
 
 export default filmSlice;
-export const { selectSelectedFilm, selectIsFilmLoading, selectIsFilmNotFound } = filmSlice.selectors;
-export const { resetSelectedFilm, fetchFilmAction } = filmSlice.actions;
+
+export const {
+  selectSelectedFilm,
+  selectIsFilmLoading,
+  selectIsFilmNotFound
+} = filmSlice.selectors;
+
+export const { fetchFilmAction } = filmSlice.actions;

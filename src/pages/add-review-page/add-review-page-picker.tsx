@@ -1,6 +1,6 @@
-import { useAppSelector } from '../../hooks/app-dispatch';
+import Spinner from '../../components/spinner/spinner';
+import { useAppSelector } from '../../hooks/hooks';
 import { selectIsFilmNotFound, selectSelectedFilm } from '../../store/film-slice';
-import LoadingPage from '../loading-page/loading-page';
 import NotFoundPage from '../not-found-page/not-found-page';
 import AddReviewPage from './add-review-page';
 
@@ -14,7 +14,7 @@ function AddReviewPagePicker(): JSX.Element | null{
   }
 
   if (selectedFilm === null) {
-    return <LoadingPage />;
+    return <Spinner />;
   }
 
   return <AddReviewPage selectedFilm={selectedFilm} />;

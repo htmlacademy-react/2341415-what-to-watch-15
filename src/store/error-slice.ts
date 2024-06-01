@@ -1,5 +1,6 @@
-import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
+import { buildCreateSlice, asyncThunkCreator, PayloadAction } from '@reduxjs/toolkit';
 import { TIMEOUT_SHOW_ERROR } from '../const';
+import { getMessage } from '../api/handle-error';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -13,27 +14,39 @@ const initialState: ErrorState = {
   message: null,
 };
 
+export const ERROR_SLICE_NAME = 'error';
+
 const errorSlice = createSliceWithThunks({
-  name: 'error',
+  name: ERROR_SLICE_NAME,
   initialState,
   selectors: {
     selectErrorMessage: (state) => state.message,
   },
-  reducers: (create) => ({
-    setErrorMessage: create.reducer<string | null>((state, action) => {
+  reducers: {
+    setErrorMessage(state, action: PayloadAction<string>) {
       state.message = action.payload;
-    }),
-    resetErrorMessage: create.asyncThunk<void, undefined, { extra: object }>(
-      (_arg, { dispatch }) => {
-        setTimeout(
-          () => dispatch(errorSlice.actions.setErrorMessage(null)),
-          TIMEOUT_SHOW_ERROR,
-        );
-      }
-    ),
-  }),
+    },
+    resetErrorMessage(state) {
+      state.message = null;
+    }
+  },
 });
 
 export default errorSlice;
+
 export const { selectErrorMessage } = errorSlice.selectors;
-export const { setErrorMessage, resetErrorMessage } = errorSlice.actions;
+
+export const {
+  setErrorMessage,
+  resetErrorMessage
+} = errorSlice.actions;
+
+export const showErrorMessage = (err: unknown, dispatch: (action: unknown) => void) => {
+  dispatch(setErrorMessage(getMessage(err)));
+  setTimeout(
+    () => {
+      dispatch(resetErrorMessage());
+    },
+    TIMEOUT_SHOW_ERROR
+  );
+};

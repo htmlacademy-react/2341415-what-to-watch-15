@@ -1,8 +1,8 @@
-import { Film } from '../../types';
+import { PromoFilm as TPromoFilm } from '../../types';
 import FilmCardButtons from '../film-card-buttons/film-card-buttons';
 
 type Props = {
-  promoFilm: Film;
+  promoFilm: TPromoFilm;
 };
 
 function PromoFilm({ promoFilm }: Props): JSX.Element {
@@ -23,7 +23,7 @@ function PromoFilm({ promoFilm }: Props): JSX.Element {
           <span className="film-card__year">{promoFilm.released}</span>
         </p>
         <div className="film-card__buttons">
-          <FilmCardButtons id={promoFilm.id} videoLink={promoFilm.videoLink} runTime={promoFilm.runTime} />
+          <FilmCardButtons id={promoFilm.id} videoLink={promoFilm.videoLink} />
         </div>
       </div>
     </div>

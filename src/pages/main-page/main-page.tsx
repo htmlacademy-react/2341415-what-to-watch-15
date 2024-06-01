@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import FilmList from '../../components/cards/film-list';
+import FilmList from '../../components/film-list/film-list';
 import Footer from '../../components/footer/footer';
 import GenreTabs from '../../components/genre-tabs/genre-tabs';
 import Header from '../../components/header/header';
 import ShowMoreButton from '../../components/show-more-button/show-more-button';
 import { ALL_GENRES } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { selectPromoFilm, selectGenres, selectDisplayedFilms, selectDisplayedFilmsNumber, resetDisplayedFilmsNumber, selectFilteredFilmsNumber } from '../../store/films-slice';
 import PromoFilm from '../../components/promo-film/promo-film';
 

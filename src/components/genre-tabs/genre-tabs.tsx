@@ -1,5 +1,5 @@
 import { MouseEventHandler } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { selectSelectedGenre, setSelectedGenre } from '../../store/films-slice';
 import GenreTabsItem from './genre-tabs-item';
 

@@ -1,4 +1,4 @@
-import { useAppSelector } from '../../hooks/app-dispatch';
+import { useAppSelector } from '../../hooks/hooks';
 import { selectErrorMessage } from '../../store/error-slice';
 import './error-message.css';
 

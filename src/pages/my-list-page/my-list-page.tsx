@@ -1,12 +1,12 @@
-import FilmList from '../../components/cards/film-list';
+import FilmList from '../../components/film-list/film-list';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
-import { useAppSelector } from '../../hooks/app-dispatch';
-import { selectMyList } from '../../store/my-list-slice';
+import { useAppSelector } from '../../hooks/hooks';
+import { selectMyFilms } from '../../store/user-slice';
 
 function MyListPage(): JSX.Element {
 
-  const myList = useAppSelector(selectMyList);
+  const myList = useAppSelector(selectMyFilms);
 
   return (
     <div className="user-page">

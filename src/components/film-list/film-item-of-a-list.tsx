@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FilmListItem } from '../../types';
 import { AppRoute } from '../../const';
 import { useRef, useState } from 'react';
@@ -65,9 +65,9 @@ function FilmItemOfAList({ name, previewImage, id, onCardMouseEnter, onCardMouse
     >
       {showVideo ? getVideo() : getImg()}
       <h3 className="small-film-card__title">
-        <a className="small-film-card__link" href="film-page.html">
+        <Link onClick={handleClick} className="small-film-card__link" to="">
           {name}
-        </a>
+        </Link>
       </h3>
     </article>
   );

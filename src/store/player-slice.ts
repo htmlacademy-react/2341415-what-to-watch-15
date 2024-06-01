@@ -1,31 +1,56 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
+import { FilmsApi } from '../api/films-api';
+import { showErrorMessage } from './error-slice';
+
+const createSliceWithThunks = buildCreateSlice({
+  creators: { asyncThunk: asyncThunkCreator },
+});
 
 type PlayerState = {
   videoLink: string;
-  runTime: number;
 }
 
 const initialState: PlayerState = {
   videoLink: '',
-  runTime: 0,
 };
 
-const playerSlice = createSlice({
-  name: 'player',
+
+export const PLAYER_SLICE_NAME = 'player';
+
+const playerSlice = createSliceWithThunks({
+  name: PLAYER_SLICE_NAME,
   initialState,
   selectors: {
     selectVideoLink: (state) => state.videoLink,
-    selectRunTime: (state) => state.runTime,
   },
-  reducers: {
-    setVideoParams(state, action: PayloadAction<{ videoLink: string; runTime: number }>) {
+  reducers: (create) => ({
+    setVideoLink: create.reducer((state, action: PayloadAction<string>) => {
       const { payload } = action;
-      state.videoLink = payload.videoLink;
-      state.runTime = payload.runTime;
-    }
-  },
+      state.videoLink = payload;
+    }),
+    fetchVideoLinkAction: create.asyncThunk<string, string, { extra: { filmsApi: FilmsApi }}>(
+      async (id, { extra: { filmsApi }, dispatch }) => {
+        const film = await filmsApi.getFilm(id).catch((err) => {
+          showErrorMessage(err, dispatch);
+          throw err;
+        });
+        return film.videoLink;
+      },
+      {
+        fulfilled: (state, action) => {
+          const { payload: videoLink } = action;
+          state.videoLink = videoLink;
+        },
+      }
+    )
+  }),
 });
 
 export default playerSlice;
-export const { setVideoParams } = playerSlice.actions;
-export const { selectVideoLink, selectRunTime } = playerSlice.selectors;
+
+export const {
+  setVideoLink,
+  fetchVideoLinkAction
+} = playerSlice.actions;
+
+export const { selectVideoLink } = playerSlice.selectors;

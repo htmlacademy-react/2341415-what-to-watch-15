@@ -1,8 +1,7 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Comment, UserComment } from '../types';
-import { CommentsApi } from '../services/comments-api';
-import { setErrorMessage } from './error-slice';
-import { getMessage } from '../services/handle-error';
+import { CommentsApi } from '../api/comments-api';
+import { showErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -20,21 +19,19 @@ const initialState: CommentsState = {
   isCommentWasAdded: false
 };
 
+export const COMMENTS_SLICE_NAME = 'comments';
+
 const commentsSlice = createSliceWithThunks({
-  name: 'comments',
+  name: COMMENTS_SLICE_NAME,
   initialState,
   selectors: {
     selectComments: (state) => state.comments,
-    selectCommentWasAdded: (state) => state.isCommentWasAdded,
     selectIsCommentAddingInProgress: (state) => state.isCommentAddingInProgress,
   },
   reducers: (create) => ({
-    resetCommentWasAddedAction: create.reducer((state) => {
-      state.isCommentWasAdded = false;
-    }),
     fetchCommentsAction: create.asyncThunk<Comment[], string, { extra: { commentsApi: CommentsApi }}>(
-      async (id, { extra: { commentsApi } }) => commentsApi.getList(id).catch((err) => {
-        setErrorMessage(getMessage(err));
+      async (id, { extra: { commentsApi }, dispatch }) => commentsApi.getList(id).catch((err) => {
+        showErrorMessage(err, dispatch);
         throw err;
       }),
       {
@@ -53,13 +50,13 @@ const commentsSlice = createSliceWithThunks({
           return res;
         })
         .catch((err) => {
-          dispatch(setErrorMessage(getMessage(err)));
+          showErrorMessage(err, dispatch);
           throw err;
         }),
     {
       fulfilled: (state, action) => {
         state.isCommentAddingInProgress = false;
-        state.comments = [action.payload,...state.comments];
+        state.comments = [action.payload, ...state.comments];
         state.isCommentWasAdded = true;
       },
       pending: (state) => {
@@ -74,5 +71,13 @@ const commentsSlice = createSliceWithThunks({
 });
 
 export default commentsSlice;
-export const { selectComments, selectCommentWasAdded, selectIsCommentAddingInProgress } = commentsSlice.selectors;
-export const { fetchCommentsAction, addCommentAction, resetCommentWasAddedAction } = commentsSlice.actions;
+
+export const {
+  selectComments,
+  selectIsCommentAddingInProgress
+} = commentsSlice.selectors;
+
+export const {
+  fetchCommentsAction,
+  addCommentAction
+} = commentsSlice.actions;
