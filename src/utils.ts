@@ -15,11 +15,11 @@ export function getRatingName(rating: number): string {
 
 const requiredNumberLength = 2;
 
-const toDigitStr = (n: number) => {
+function toDigitStr(n: number) {
   const numberStr = n.toString();
 
   return numberStr.length < requiredNumberLength ? `0${numberStr}` : numberStr;
-};
+}
 
 export function getRunTime(runTime: number): string {
   const { hours, seconds, minutes } = intervalToDuration({ start: 0, end: runTime * MILLISECONDS_IN_SECOND });

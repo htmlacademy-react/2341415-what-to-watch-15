@@ -8,9 +8,9 @@ const filmsApi = {
     return data;
   },
 
-  async getPromo(): Promise<Film> {
-    const { data: { id } } = await api.get<PromoFilm>(ServerRoute.Promo);
-    return this.getFilm(id);
+  async getPromo(): Promise<PromoFilm> {
+    const { data } = await api.get<PromoFilm>(ServerRoute.Promo);
+    return data;
   },
 
   async getFilm(id: string): Promise<Film> {

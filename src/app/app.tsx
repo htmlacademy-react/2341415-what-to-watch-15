@@ -3,16 +3,16 @@ import { AuthorizationStatus, PageRoute } from '../const';
 import MainPage from '../pages/main-page/main-page';
 import NotFoundPage from '../pages/not-found-page/not-found-page';
 import FilmPagePicker from '../pages/film-page/film-page-picker';
-import MyListPage from '../pages/my-list/my-list-page';
+import MyListPage from '../pages/my-list-page/my-list-page';
 import LoginPage from '../pages/login-page/login-page';
 import ConditionalRoute from '../components/conditional-route/conditional-route';
-import { useAppSelector } from '../hooks/app-dispatch';
+import { useAppSelector } from '../hooks/hooks';
 import { selectAuthorizationStatus, selectIsUserDataLoading } from '../store/user-slice';
 import { selectIsFilmsLoading } from '../store/films-slice';
 import ErrorMessage from '../components/error-message/error-message';
 import AddReviewPagePicker from '../pages/add-review-page/add-review-page-picker';
 import Spinner from '../components/spinner/spinner';
-import PlayerPagePicker from '../pages/player/player-page-picker';
+import PlayerPagePicker from '../pages/player-page/player-page-picker';
 
 function getOnLoadingRoutes() {
   return (

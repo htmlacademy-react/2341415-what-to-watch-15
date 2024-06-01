@@ -1,5 +1,5 @@
 import { PayloadAction, asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
-import { FilmsApi } from '../services/films-api';
+import { FilmsApi } from '../api/films-api';
 import { showErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
@@ -8,39 +8,38 @@ const createSliceWithThunks = buildCreateSlice({
 
 type PlayerState = {
   videoLink: string;
-  runTime: number;
 }
 
 const initialState: PlayerState = {
   videoLink: '',
-  runTime: 0,
 };
 
+
+export const PLAYER_SLICE_NAME = 'player';
+
 const playerSlice = createSliceWithThunks({
-  name: 'player',
+  name: PLAYER_SLICE_NAME,
   initialState,
   selectors: {
     selectVideoLink: (state) => state.videoLink,
   },
   reducers: (create) => ({
-    setVideoParams: create.reducer((state, action: PayloadAction<{ videoLink: string; runTime: number }>) => {
+    setVideoLink: create.reducer((state, action: PayloadAction<string>) => {
       const { payload } = action;
-      state.videoLink = payload.videoLink;
-      state.runTime = payload.runTime;
+      state.videoLink = payload;
     }),
-    fetchPlayingFilmAction: create.asyncThunk<{ videoLink: string; runTime: number }, string, { extra: { filmsApi: FilmsApi }}>(
+    fetchVideoLinkAction: create.asyncThunk<string, string, { extra: { filmsApi: FilmsApi }}>(
       async (id, { extra: { filmsApi }, dispatch }) => {
         const film = await filmsApi.getFilm(id).catch((err) => {
           showErrorMessage(err, dispatch);
           throw err;
         });
-        return film;
+        return film.videoLink;
       },
       {
         fulfilled: (state, action) => {
-          const { payload: film} = action;
-          state.runTime = film.runTime;
-          state.videoLink = film.videoLink;
+          const { payload: videoLink } = action;
+          state.videoLink = videoLink;
         },
       }
     )
@@ -50,8 +49,8 @@ const playerSlice = createSliceWithThunks({
 export default playerSlice;
 
 export const {
-  setVideoParams,
-  fetchPlayingFilmAction
+  setVideoLink,
+  fetchVideoLinkAction
 } = playerSlice.actions;
 
 export const { selectVideoLink } = playerSlice.selectors;

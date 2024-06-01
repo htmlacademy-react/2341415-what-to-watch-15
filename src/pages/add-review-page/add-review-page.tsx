@@ -1,4 +1,4 @@
-import ReviewForm from '../../components/forms/review-form';
+import ReviewForm from '../../components/review-form/review-form';
 import Header from '../../components/header/header';
 import { Film } from '../../types';
 

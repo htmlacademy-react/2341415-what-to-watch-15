@@ -1,7 +1,7 @@
-import FilmList from '../../components/cards/film-list';
+import FilmList from '../../components/film-list/film-list';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
-import { useAppSelector } from '../../hooks/app-dispatch';
+import { useAppSelector } from '../../hooks/hooks';
 import { selectMyFilms } from '../../store/user-slice';
 
 function MyListPage(): JSX.Element {

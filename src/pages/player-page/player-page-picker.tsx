@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useEffect } from 'react';
 import NotFoundPage from '../not-found-page/not-found-page';
 import PlayerPage from './player-page';
-import { fetchPlayingFilmAction, selectVideoLink } from '../../store/player-slice';
+import { fetchVideoLinkAction, selectVideoLink } from '../../store/player-slice';
 import Spinner from '../../components/spinner/spinner';
 
 function PlayerPagePicker(): JSX.Element | null{
@@ -14,7 +14,7 @@ function PlayerPagePicker(): JSX.Element | null{
   useEffect(
     () => {
       if(id && !videoLink) {
-        dispatch(fetchPlayingFilmAction(id));
+        dispatch(fetchVideoLinkAction(id));
       }
     },
     [id, videoLink, dispatch]

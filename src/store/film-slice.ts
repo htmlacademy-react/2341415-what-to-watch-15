@@ -1,6 +1,6 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Film } from '../types';
-import { FilmsApi } from '../services/films-api';
+import { FilmsApi } from '../api/films-api';
 import { isNotFoundError } from '../utils';
 import { showErrorMessage } from './error-slice';
 
@@ -20,8 +20,11 @@ const initialState: FilmState = {
   notFound: false,
 };
 
+
+export const FILM_SLICE_NAME = 'film';
+
 const filmSlice = createSliceWithThunks({
-  name: 'film',
+  name: FILM_SLICE_NAME,
   initialState,
   selectors: {
     selectSelectedFilm: (state) => state.selectedFilm,

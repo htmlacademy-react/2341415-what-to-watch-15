@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import FilmPage from './film-page';
 import { fetchFilmAction, selectIsFilmLoading, selectIsFilmNotFound, selectSelectedFilm } from '../../store/film-slice';
 import { useEffect } from 'react';
@@ -34,7 +34,6 @@ function FilmPagePicker(): JSX.Element | null{
         dispatch(fetchSimilarFilmsAction(id));
         dispatch(fetchCommentsAction(id));
       }
-
     },
     [selectedFilm, id, isSelectedFilmLoading, isSelectedFilmNotFound, isSimilarFilmsLoading, isSimilarNotFound, dispatch, error]
   );

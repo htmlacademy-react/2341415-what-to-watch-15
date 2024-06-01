@@ -1,5 +1,5 @@
 import Spinner from '../../components/spinner/spinner';
-import { useAppSelector } from '../../hooks/app-dispatch';
+import { useAppSelector } from '../../hooks/hooks';
 import { selectIsFilmNotFound, selectSelectedFilm } from '../../store/film-slice';
 import NotFoundPage from '../not-found-page/not-found-page';
 import AddReviewPage from './add-review-page';

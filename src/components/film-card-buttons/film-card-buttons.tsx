@@ -1,16 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
-import { setVideoParams } from '../../store/player-slice';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { setVideoLink } from '../../store/player-slice';
 import { fetchIsFavoritesAction, selectAddingToFavoritesOfferIds, selectAuthorizationStatus, selectMyFilms } from '../../store/user-slice';
 
 type Props = {
   id: string;
   videoLink: string;
-  runTime: number;
 };
 
-function FilmCardButtons({ id, videoLink, runTime }: Props): JSX.Element {
+function FilmCardButtons({ id, videoLink }: Props): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -20,9 +19,8 @@ function FilmCardButtons({ id, videoLink, runTime }: Props): JSX.Element {
   const myFilms = useAppSelector(selectMyFilms);
   const isFavorite = myFilms.some((film) => film.id === id);
 
-
   function handleClickPlayer() {
-    dispatch(setVideoParams({ videoLink, runTime }));
+    dispatch(setVideoLink(videoLink));
     navigate(`${AppRoute.Player}${id}`);
   }
 

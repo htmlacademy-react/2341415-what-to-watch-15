@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { addCommentAction, selectIsCommentAddingInProgress } from '../../store/comments-slice';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, FilmTab } from '../../const';

@@ -1,6 +1,6 @@
-import { useRef, useState, MouseEvent } from 'react';
+import { useRef, useState, MouseEvent, useEffect } from 'react';
 import { isNil } from 'lodash';
-import { useAppSelector } from '../../hooks/app-dispatch';
+import { useAppSelector } from '../../hooks/hooks';
 import { selectVideoLink } from '../../store/player-slice';
 import { getRunTime } from '../../utils';
 import { useNavigate } from 'react-router-dom';
@@ -15,25 +15,38 @@ function PlayerPage(): JSX.Element {
   const [leftTimeValue, setLeftTimeValue] = useState(0);
   const navigate = useNavigate();
 
-  setInterval(() => {
-    const duration = vidRef.current?.duration ?? 0;
-    const currentTime = vidRef.current?.currentTime ?? 0;
+  useEffect(() => {
+    let isMounted = true;
 
-    if (
-      Number.isFinite(duration)
-      && duration > 0
-    ) {
-      setRunTime(duration);
-      setCurrentTimePercentage((currentTime * 100) / (duration));
-      setLeftTimeValue(duration - currentTime);
-      if(vidRef.current?.paused) {
-        setIsPaused(() => true);
+    const timer = setInterval(() => {
+      if (!isMounted) {
+        return;
       }
-    } else {
 
-      setLeftTimeValue(0);
-    }
-  }, 100);
+      const duration = vidRef.current?.duration ?? 0;
+      const currentTime = vidRef.current?.currentTime ?? 0;
+
+      if (
+        Number.isFinite(duration)
+        && duration > 0
+      ) {
+        setRunTime(duration);
+        setCurrentTimePercentage((currentTime * 100) / (duration));
+        setLeftTimeValue(duration - currentTime);
+        if(vidRef.current?.paused) {
+          setIsPaused(() => true);
+        }
+      } else {
+
+        setLeftTimeValue(0);
+      }
+    }, 50);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  });
 
   const handlePlayVideo = () => {
     if (!vidRef.current) {
@@ -47,7 +60,6 @@ function PlayerPage(): JSX.Element {
     } else {
       vidRef.current.pause();
     }
-
   };
 
   const handleFullscreen = () => {

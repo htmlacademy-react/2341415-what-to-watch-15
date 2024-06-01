@@ -1,6 +1,6 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { FilmListItem } from '../types';
-import { FilmsApi } from '../services/films-api';
+import { FilmsApi } from '../api/films-api';
 import { showErrorMessage } from './error-slice';
 import { isNotFoundError } from '../utils';
 
@@ -20,8 +20,10 @@ const initialState: SimilarFilmsState = {
   notFoundSimilar: false,
 };
 
+export const SIMILAR_FILMS_SLICE_NAME = 'similarFilms';
+
 const similarFilmsSlice = createSliceWithThunks({
-  name: 'similarFilms',
+  name: SIMILAR_FILMS_SLICE_NAME,
   initialState,
   selectors: {
     selectSimilarFilms: (state) => state.similarFilms,

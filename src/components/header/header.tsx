@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageRoute } from '../../const';
 import Logo from '../logo/logo';
 import { logoutAction, selectUser } from '../../store/user-slice';
-import { useAppDispatch, useAppSelector } from '../../hooks/app-dispatch';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 type UserBlockProps = {
   avatarUrl: string;

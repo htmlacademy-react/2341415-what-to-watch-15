@@ -1,6 +1,6 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { Comment, UserComment } from '../types';
-import { CommentsApi } from '../services/comments-api';
+import { CommentsApi } from '../api/comments-api';
 import { showErrorMessage } from './error-slice';
 
 const createSliceWithThunks = buildCreateSlice({
@@ -19,8 +19,10 @@ const initialState: CommentsState = {
   isCommentWasAdded: false
 };
 
+export const COMMENTS_SLICE_NAME = 'comments';
+
 const commentsSlice = createSliceWithThunks({
-  name: 'comments',
+  name: COMMENTS_SLICE_NAME,
   initialState,
   selectors: {
     selectComments: (state) => state.comments,
@@ -54,7 +56,7 @@ const commentsSlice = createSliceWithThunks({
     {
       fulfilled: (state, action) => {
         state.isCommentAddingInProgress = false;
-        state.comments = [action.payload, ...state.comments].sort((a,b) => b.rating - a.rating);
+        state.comments = [action.payload, ...state.comments];
         state.isCommentWasAdded = true;
       },
       pending: (state) => {

@@ -1,10 +1,10 @@
 import { buildCreateSlice, asyncThunkCreator } from '@reduxjs/toolkit';
 import { AuthorizationStatus } from '../const';
 import { AuthData, FilmListItem, User } from '../types';
-import { getToken } from '../services/token';
-import { UserApi } from '../services/user-api';
+import { getToken } from '../api/token';
+import { UserApi } from '../api/user-api';
 import { showErrorMessage } from './error-slice';
-import { MyListApi } from '../services/my-list-api';
+import { MyListApi } from '../api/my-list-api';
 
 const createSliceWithThunks = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -26,8 +26,10 @@ const initialState: UserState = {
   addingToFavoritesOfferIds: [],
 };
 
+export const USER_SLICE_NAME = 'user';
+
 const userSlice = createSliceWithThunks({
-  name: 'user',
+  name: USER_SLICE_NAME,
   initialState,
   selectors: {
     selectUser: (state) => state.user,
